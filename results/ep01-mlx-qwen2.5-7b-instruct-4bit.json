@@ -1,0 +1,46 @@
+{
+  "run_at": "2026-06-11T20:51:42.693064+00:00",
+  "engine": "mlx",
+  "model_id": "mlx-community/Qwen2.5-7B-Instruct-4bit",
+  "results": [
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Qwen2.5-7B-Instruct-4bit",
+      "prompt_id": "short_factual",
+      "prompt_tokens": 37,
+      "ttft_ms": 117.71,
+      "prefill_tps": 519.8,
+      "decode_tok_s": 118.3,
+      "output_tokens": 200,
+      "peak_memory_gb": 4.425,
+      "wall_time_s": 1.809,
+      "output_text": "Apple Silicon refers to the line of ARM-based processors designed and manufactured by Apple for Macs. Unified memory in Apple Silicon means that both the CPU and GPU share the same memory space, which enhances performance for AI workloads in several ways:\n\n1. **Faster Data Transfer**: With unified memory, data doesn't need to be copied between the CPU and GPU, reducing latency and improving efficiency.\n\n2. **Better Parallel Processing**: AI models often require parallel processing. Unified memory allows for more efficient use of resources, enabling better parallelization and faster execution.\n\n3. **Reduced Memory Bandwidth**: By sharing memory, the system can manage memory more efficiently, reducing the need for frequent data transfers and lowering overall memory bandwidth usage.\n\n4. **Improved Model Training**: For training large AI models, unified memory can significantly speed up the process by allowing both the CPU and GPU to access and process data simultaneously.\n\nOverall, unified memory in Apple Silicon optimizes AI workloads by improving performance and efficiency."
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Qwen2.5-7B-Instruct-4bit",
+      "prompt_id": "medium_reasoning",
+      "prompt_tokens": 57,
+      "ttft_ms": 110.23,
+      "prefill_tps": 941.8,
+      "decode_tok_s": 116.6,
+      "output_tokens": 400,
+      "peak_memory_gb": 4.474,
+      "wall_time_s": 3.54,
+      "output_text": "Sure, when a Spark job is taking significantly longer than its Service Level Agreement (SLA), it's important to diagnose the issue systematically. Here are the first five diagnostic steps you should take:\n\n### 1. **Check Spark UI and Logs**\n   - **Spark UI**: Open the Spark UI for the job by navigating to `http://<driver-node>:4040`. Look at the stages and tasks to identify any bottlenecks or failures.\n   - **Logs**: Check the logs for the driver and executors. Look for any error messages or warnings that might indicate what's going wrong. Common issues include out-of-memory errors, data skew, or network problems.\n\n### 2. **Analyze Task Execution Times**\n   - **Task Duration**: Use the Spark UI to analyze the duration of each task. Look for tasks that are taking significantly longer than others. This can help identify if there is a specific stage or task causing the delay.\n   - **Stage Duration**: Check the duration of each stage. Long-running stages can indicate issues with data shuffling or data skew.\n\n### 3. **Check Resource Utilization**\n   - **Resource Allocation**: Ensure that each node has enough resources (CPU, memory, and disk) to handle the workload. Use tools like `top`, `htop`, or `jps` to monitor resource usage on the nodes.\n   - **Resource Requests**: Check the Spark configuration to ensure that the resources requested by the job are appropriate. For example, check the `spark.executor.memory` and `spark.executor.cores` settings.\n\n### 4. **Review Data Skew and Partitioning**\n   - **Data Skew**: Data skew can cause some tasks to take much longer than others. Use the Spark UI to check the distribution of data across partitions. Look for any partitions that are significantly larger than others.\n   - **Partitioning Strategy**: Ensure that the partitioning strategy used in your Spark job is appropriate for the"
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Qwen2.5-7B-Instruct-4bit",
+      "prompt_id": "long_generation",
+      "prompt_tokens": 48,
+      "ttft_ms": 118.27,
+      "prefill_tps": 693.3,
+      "decode_tok_s": 116.8,
+      "output_tokens": 600,
+      "peak_memory_gb": 4.474,
+      "wall_time_s": 5.256,
+      "output_text": "### Kafka Consumer Lag Runbook\n\n#### 1. Introduction\nThis runbook is designed to help system administrators and DevOps engineers respond to a Kafka consumer lag alert. Kafka consumer lag occurs when the consumer is not keeping up with the rate at which messages are being produced to the topic. This can lead to data loss or processing delays, which can be critical in real-time data processing systems.\n\n#### 2. Symptoms\n- **High Consumer Lag:** The consumer lag is significantly high, indicating that the consumer is falling behind the producer.\n- **Increased Latency:** Users or services dependent on the data processed by the consumer may experience increased latency.\n- **Error Logs:** Logs may show warnings or errors related to the consumer not keeping up with the topic.\n- **Performance Metrics:** Monitoring tools may show metrics such as `consumer_lag` or `offsets_lag` increasing over time.\n\n#### 3. Root Causes\n- **High Message Rate:** The producer is sending messages to the topic at a rate faster than the consumer can process.\n- **Consumer Configuration Issues:** Misconfigured consumer settings such as `fetch.min.bytes`, `fetch.max.wait.ms`, or `max.partition.fetch.bytes`.\n- **Resource Constraints:** Insufficient CPU, memory, or disk I/O resources on the consumer node.\n- **Network Issues:** Network latency or packet loss between the consumer and the Kafka broker.\n- **Consumer Group Imbalance:** If multiple consumers are part of the same consumer group, an imbalance in the distribution of partitions can cause some consumers to lag behind.\n\n#### 4. Remediation Steps\n1. **Verify Consumer Lag:**\n   - Check the consumer lag using the Kafka command-line tool or a monitoring dashboard.\n   - Example command: `kafka-consumer-groups.sh --describe --group <group-name> --bootstrap-server <broker-url>`\n\n2. **Analyze Consumer Configuration:**\n   - Review the consumer configuration to ensure it is optimized for the workload.\n   - Adjust settings like `fetch.min.bytes`, `fetch.max.wait.ms`, and `max.partition.fetch.bytes` if necessary.\n\n3. **Check Resource Utilization:**\n   - Monitor CPU, memory, and disk I/O usage on the consumer node.\n   - Use tools like `top`, `htop`, `iostat`, or `vmstat` to check resource usage.\n\n4. **Optimize Network Performance:**\n   - Check network latency and packet loss between the consumer and the Kafka broker.\n   - Use tools like `ping`, `traceroute`, or `iperf` to diagnose network issues.\n\n5. **Rebalance Consumer Group:**\n   - If the consumer group is imbalanced, use the Kafka command-line tool to rebalance the partitions.\n   - Example command: `kafka-consumer-groups.sh --balance --group <group-name> --bootstrap-server <broker-url>`\n\n6. **Scale Consumer Resources:**\n   - If resource constraints are the issue,"
+    }
+  ]
+}

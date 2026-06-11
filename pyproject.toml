@@ -1,0 +1,18 @@
+[project]
+name = "mlx-lab"
+version = "0.1.0"
+description = "Local LLM benchmarking & agent eval on Apple Silicon — M5 Max 128GB"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "mlx-lm>=0.31.3",
+    "psutil>=7.2.2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["bench"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

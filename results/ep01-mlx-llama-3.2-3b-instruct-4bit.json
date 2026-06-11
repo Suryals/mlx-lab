@@ -1,0 +1,46 @@
+{
+  "run_at": "2026-06-11T20:51:24.801086+00:00",
+  "engine": "mlx",
+  "model_id": "mlx-community/Llama-3.2-3B-Instruct-4bit",
+  "results": [
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Llama-3.2-3B-Instruct-4bit",
+      "prompt_id": "short_factual",
+      "prompt_tokens": 60,
+      "ttft_ms": 92.92,
+      "prefill_tps": 1440.2,
+      "decode_tok_s": 228.9,
+      "output_tokens": 196,
+      "peak_memory_gb": 2.059,
+      "wall_time_s": 0.949,
+      "output_text": "Apple Silicon refers to Apple's line of system-on-chip (SoC) processors designed for Mac computers, replacing Intel processors. These chips are built on Apple's custom-designed ARM architecture.\n\nUnified Memory (UM) is a feature of Apple Silicon that allows multiple cores to share a single memory space, improving performance and efficiency. This matters for AI workloads because:\n\n1. **Memory bandwidth**: AI models require large amounts of memory bandwidth to process data quickly. UM helps by reducing memory access times and increasing overall memory bandwidth.\n2. **Cache coherence**: UM ensures that data is consistently accessed and updated across multiple cores, reducing cache coherence issues that can slow down AI workloads.\n3. **Thread efficiency**: UM enables multiple threads to share memory, improving thread efficiency and reducing the overhead of context switching.\n\nBy leveraging Unified Memory, Apple Silicon-based Macs can deliver improved performance and efficiency for AI workloads, such as machine learning, deep learning, and computer vision applications."
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Llama-3.2-3B-Instruct-4bit",
+      "prompt_id": "medium_reasoning",
+      "prompt_tokens": 78,
+      "ttft_ms": 84.01,
+      "prefill_tps": 1791.6,
+      "decode_tok_s": 226.1,
+      "output_tokens": 400,
+      "peak_memory_gb": 2.059,
+      "wall_time_s": 1.853,
+      "output_text": "Let's get to the bottom of this issue. Here are my first 5 diagnostic steps:\n\n**Step 1: Gather Cluster Information**\n\nI'll start by gathering information about the cluster, including node details, Spark version, and any relevant configuration settings. This will help me understand the current state of the cluster and identify potential bottlenecks.\n\n* I'll use the `spark-shell` command to run a simple Spark program that prints out the cluster information, including node details, Spark version, and configuration settings.\n* I'll also use the `yarn` or `mesos` command-line tool to gather information about the cluster's resource utilization, such as CPU and memory usage.\n\n**Step 2: Check Spark Job Details**\n\nNext, I'll gather information about the Spark job that's taking longer than expected. This includes details about the job's configuration, such as the number of tasks, task duration, and any relevant error messages.\n\n* I'll use the `yarn` or `mesos` command-line tool to gather information about the job's execution history, including the number of tasks, task duration, and any relevant error messages.\n* I'll also use the `spark-submit` command to gather information about the job's configuration, such as the number of executors, executor memory, and any relevant configuration settings.\n\n**Step 3: Check Node Resource Utilization**\n\nI'll investigate the resource utilization of each node in the cluster to see if any nodes are experiencing resource constraints that could be contributing to the job's slow performance.\n\n* I'll use the `yarn` or `mesos` command-line tool to gather information about the node's resource utilization, including CPU and memory usage.\n* I'll also use the `jstack` command to gather a thread dump of the Spark driver or executor processes running on each node.\n\n**Step 4: Check Network and Storage Performance**\n\nI'll investigate the network and storage performance of the cluster to see if any issues"
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Llama-3.2-3B-Instruct-4bit",
+      "prompt_id": "long_generation",
+      "prompt_tokens": 71,
+      "ttft_ms": 89.56,
+      "prefill_tps": 1642.5,
+      "decode_tok_s": 225.1,
+      "output_tokens": 600,
+      "peak_memory_gb": 2.059,
+      "wall_time_s": 2.755,
+      "output_text": "**Kafka Consumer Lag Alert Runbook**\n\n**Symptoms:**\n\n* The Kafka consumer is experiencing a high lag, resulting in a significant backlog of messages.\n* The consumer is unable to keep up with the rate of new messages being produced by the Kafka topic.\n* The lag is causing issues with the overall system, such as delayed processing or errors.\n\n**Root Causes:**\n\n1. **Insufficient resources**: The consumer is not receiving enough resources (e.g., CPU, memory, or network bandwidth) to handle the workload.\n2. **Consumer configuration issues**: The consumer configuration is not properly set up, leading to inefficient use of resources or incorrect handling of messages.\n3. **Network connectivity issues**: There are problems with the network connection between the consumer and the Kafka cluster.\n4. **Message processing issues**: The consumer is experiencing issues with message processing, such as incorrect handling of messages or errors.\n5. **System overload**: The system is experiencing an overload, causing the consumer to slow down or become unresponsive.\n\n**Remediation Steps:**\n\n**Initial Response (0-15 minutes)**\n\n1. **Verify the alert**: Check the Kafka consumer logs to verify the high lag and confirm the symptoms.\n2. **Gather information**: Collect relevant information, such as:\n\t* Consumer configuration and settings\n\t* Kafka cluster details (e.g., brokers, topics, partitions)\n\t* System resource utilization (e.g., CPU, memory, network bandwidth)\n\t* Error logs and messages\n3. **Check for network connectivity**: Verify the network connection between the consumer and the Kafka cluster.\n4. **Check for system overload**: Check if the system is experiencing an overload, which could be causing the consumer to slow down or become unresponsive.\n\n**Short-Term Remediation (15-60 minutes)**\n\n1. **Increase resources**: Increase the resources (e.g., CPU, memory, or network bandwidth) allocated to the consumer.\n2. **Adjust consumer configuration**: Adjust the consumer configuration to optimize resource usage and improve message processing efficiency.\n3. **Check for message processing issues**: Investigate and resolve any message processing issues, such as incorrect handling of messages or errors.\n4. **Monitor system resources**: Continuously monitor system resources to ensure the consumer is not overwhelmed.\n\n**Long-Term Remediation (60 minutes+)**\n\n1. **Optimize consumer configuration**: Optimize the consumer configuration to ensure efficient resource usage and message processing efficiency.\n2. **Improve system resource allocation**: Improve system resource allocation to prevent overloads and ensure the consumer can handle the workload.\n3. **Implement message processing improvements**: Implement improvements to message processing, such as using a more efficient message handling algorithm or optimizing message serialization.\n4. **Monitor and adjust**: Continuously monitor the consumer's performance and adjust the configuration and resources as needed.\n\n**Escalation Criteria:**\n\n* The consumer lag exceeds 10 minutes.\n* The consumer is unable to keep up with the"
+    }
+  ]
+}
