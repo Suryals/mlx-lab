@@ -25,7 +25,12 @@ Build-in-public project. Each episode = a reproducible experiment + an X thread 
 | 123B | 6.3 tok/s | 4.6s | 69.2GB |
 
 A 123B model ran in 69GB. The memory probe allocated to 128GB without Metal refusing — the advertised
-115GB "recommended working set" is a soft limit, not a wall. Full writeup: [content/ep02-portfolio.md](content/ep02-portfolio.md).
+115GB "recommended working set" is a soft limit, not a wall.
+
+**14-inch thermal note:** measured on a 14" M5 Max. Cold vs sustained 70B-4bit shows the thermal tax
+lands on prefill, not decode — decode 13→13 tok/s (bandwidth holds), but prefill 98→38 tok/s and TTFT
+642ms→1,581ms (compute throttles). Data: [results/ep02-thermal-70b.json](results/ep02-thermal-70b.json).
+Full writeup: [content/ep02-portfolio.md](content/ep02-portfolio.md).
 
 ```bash
 uv run python bench/run_ladder.py      # the full ladder

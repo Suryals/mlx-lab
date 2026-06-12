@@ -72,7 +72,20 @@ The usability cliff for interactive use is ~32B. Above that it's batch work.
 
 ---
 
-**Tweet 7 (the ops war story)**
+**Tweet 7 (the thermal finding — 14-inch)**
+This is a 14-inch M5 Max. So I ran the 70B cold, then compared it to its turn deep in the hot overnight marathon:
+
+Decode: 13 → 13 tok/s (identical)
+Prefill: 98 → 38 tok/s (2.5× slower hot)
+TTFT: 642ms → 1,581ms
+
+Throttling doesn't touch generation — it's bandwidth-bound. It guts prefill, which is compute-bound. The 14" thermal tax is paid in *time-to-first-token*, not tok/s.
+
+Buying advice: ≤32B or interactive, 14" = 16". Only 70B+ sustained opens the gap.
+
+---
+
+**Tweet 8 (the ops war story)**
 Bonus, because build-in-public means showing the mess:
 
 The 8-bit 72B download failed 3 times — hf-xet hung on resume, then read-timeouts, then a dropped connection. Lesson: `HF_HUB_DISABLE_XET=1` + a longer timeout is more reliable for big resumes, and every restart spawns orphaned partials.
@@ -81,7 +94,7 @@ Cut it loose. The curve didn't need it.
 
 ---
 
-**Tweet 8 (repo + next)**
+**Tweet 9 (repo + next)**
 Everything reproducible — harness, per-model JSON, the memory probe:
 → github.com/Suryals/mlx-lab
 

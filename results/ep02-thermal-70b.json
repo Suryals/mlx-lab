@@ -1,0 +1,22 @@
+{
+  "note": "14-inch M5 Max thermal comparison on Llama-3.3-70B-Instruct-4bit. 'sustained' = the model's turn deep in the overnight back-to-back ladder (hot chassis). 'cold' = a single isolated run on an idle, cool machine. Same model, same harness, same prompts.",
+  "machine": "Apple M5 Max (40-core GPU, 614 GB/s) — 14-inch MacBook Pro, 128GB",
+  "finding": "Decode (memory-bandwidth-bound) is barely affected by throttling; prefill (compute-bound) drops ~2.5x when hot, which is what inflates TTFT. The 14-inch thermal tax lands on prompt-processing, not generation.",
+  "prompts": [
+    {"prompt_id": "short_factual",
+     "sustained": {"decode_tok_s": 13.0, "prefill_tps": 38.2, "ttft_ms": 1581.44},
+     "cold":      {"decode_tok_s": 13.0, "prefill_tps": 98.0, "ttft_ms": 642.0}},
+    {"prompt_id": "medium_reasoning",
+     "sustained": {"decode_tok_s": 10.7, "prefill_tps": 39.3, "ttft_ms": 1994.55},
+     "cold":      {"decode_tok_s": 12.0, "prefill_tps": 102.0, "ttft_ms": 797.0}},
+    {"prompt_id": "long_generation",
+     "sustained": {"decode_tok_s": 9.0, "prefill_tps": 37.0, "ttft_ms": 1927.89},
+     "cold":      {"decode_tok_s": 9.0, "prefill_tps": 88.0, "ttft_ms": 838.0}}
+  ],
+  "summary": {
+    "decode_throttle": "~negligible (bandwidth-bound holds)",
+    "prefill_throttle": "~2.5x slower sustained vs cold (compute-bound)",
+    "ttft_throttle": "~2.4x worse sustained vs cold",
+    "chassis_note": "14-inch caps ~45W; independent testing shows up to ~25% sustained GPU drop vs the 16-inch which holds steady."
+  }
+}

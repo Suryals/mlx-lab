@@ -31,7 +31,9 @@ All 4-bit quantized, three prompts each, averaged, on an idle machine.
 **2. TTFT is the real cost of going big, not throughput.**
 Time-to-first-token explodes from 89ms (3B) to **4.6 seconds** (123B) — a 52× jump. Prefill on a huge
 model is the brutal part. Decode at 123B is a usable 6 tok/s; the 4.6s you wait *before* it starts is
-what makes it batch-only. The practical cliff for interactive use is ~32B.
+what makes it batch-only. The practical cliff for interactive use is ~32B. (These TTFT figures are
+*sustained* numbers from a hot machine — see the thermal section below for how much the chassis
+inflates them.)
 
 **3. Memory is dead linear** — ~0.56GB per billion params at 4-bit. This makes the ceiling computable,
 which leads to the headline.
@@ -52,6 +54,34 @@ until Metal refuses.
 well past it. The true ceiling is essentially physical RAM minus OS overhead — far above the number
 the API reports. A PC with a 24GB GPU can't load a 70B model at all; this laptop ran 123B with 60GB
 to spare.
+
+## The 14-inch thermal tax — and which number is "real"
+
+This was run on a **14-inch** MacBook Pro M5 Max (40-core GPU, 614 GB/s). The 14-inch has a smaller
+thermal envelope than the 16-inch — it caps around 45W and throttles under sustained GPU load, where
+the 16-inch holds steady at ~64–78W. So I ran the 70B twice: once **cold** (idle machine, single run)
+and compared it to its **sustained** turn deep in the overnight back-to-back marathon (hot chassis).
+
+| 70B-4bit | Decode | Prefill | TTFT |
+|----------|--------|---------|------|
+| Cold (idle) | 13 tok/s | **98 tok/s** | **642ms** |
+| Sustained (hot) | 13 tok/s | **38 tok/s** | **1,581ms** |
+
+The finding is sharper than "it throttles": **decode is untouched, prefill takes the entire hit.**
+Decode is memory-bandwidth-bound, and bandwidth holds even when clocks drop — 13→13 tok/s, identical.
+Prefill is compute-bound, and compute clocks fall hard under heat: **~2.5× slower hot**, which is what
+balloons TTFT by ~2.4×. On a thermally-limited laptop, the generation rate is honest; the *time to
+first token* is what the chassis steals.
+
+**Which number should you trust?** Both — they answer different questions. Cold = what the silicon can
+do. Sustained = what you actually get during a long working session on a 14-inch. The gap between them
+*is* the thermal tax, and it lands on responsiveness (TTFT), not throughput.
+
+**Buying a Mac for this?** For models ≤32B or bursty/interactive use, the 14-inch and 16-inch are
+effectively identical — the work finishes before heat builds. The gap only opens on **70B+ under
+sustained load**, where independent testing shows the 14-inch dropping up to ~25% on continuous GPU
+work while the 16-inch holds. And for an *always-on* inference box, neither laptop is the right tool —
+a Mac Studio has far better sustained thermals than any MacBook and runs silent at the wall.
 
 ## The ops war story (build-in-public means showing the mess)
 

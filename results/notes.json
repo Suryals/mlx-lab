@@ -7,6 +7,11 @@
     "refused": false,
     "finding": "Metal's recommended working set (115.4GB) is a soft limit. MLX allocated 128GB on a 137GB machine without refusing; the probe stopped at its own 125GB safety cap, not a failure. The real ceiling is ~physical RAM minus OS overhead, not the advertised number."
   },
+  "thermal": {
+    "machine": "14-inch MacBook Pro, M5 Max 40-core GPU (614 GB/s), 128GB",
+    "finding": "On the 14-inch chassis the thermal tax falls on prefill (compute-bound), not decode (bandwidth-bound). 70B-4bit cold vs sustained: decode ~unchanged (13->13 tok/s), but prefill ~2.5x slower hot (98->38 tok/s) and TTFT ~2.4x worse (642ms->1834ms). Independent testing shows the 14-inch drops up to ~25% on sustained GPU load while the 16-inch holds.",
+    "buyer_takeaway": "<=32B or bursty/interactive: 14-inch and 16-inch are effectively identical. 70B+ sustained or all-day batch: 16-inch is ~15-25% faster sustained and doesn't degrade mid-session. For always-on inference, a Mac Studio beats any laptop on sustained thermals."
+  },
   "cut_loose": [
     {"model_slug": "qwen2.5-72b-instruct-8bit", "params_b": 72, "quant_bits": 8,
      "reason": "download failed 3x (xet hang, read timeout, connection drop); cut loose. The 4-bit ladder already covers the curve."}
