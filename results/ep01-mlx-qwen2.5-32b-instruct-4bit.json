@@ -1,0 +1,46 @@
+{
+  "run_at": "2026-06-11T22:29:24.737322+00:00",
+  "engine": "mlx",
+  "model_id": "mlx-community/Qwen2.5-32B-Instruct-4bit",
+  "results": [
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Qwen2.5-32B-Instruct-4bit",
+      "prompt_id": "short_factual",
+      "prompt_tokens": 37,
+      "ttft_ms": 448.03,
+      "prefill_tps": 92.6,
+      "decode_tok_s": 27.6,
+      "output_tokens": 92,
+      "peak_memory_gb": 18.567,
+      "wall_time_s": 3.785,
+      "output_text": "Apple Silicon refers to the line of ARM-based chips designed by Apple for its Mac computers, replacing Intel processors. These chips are known for their efficiency and integration with Apple's ecosystem.\n\nUnified memory in Apple Silicon means that the system and graphics memory are shared, reducing the need to transfer data between different memory pools. This is crucial for AI workloads because it speeds up data access and processing, enhancing performance and efficiency in tasks like machine learning and data analysis."
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Qwen2.5-32B-Instruct-4bit",
+      "prompt_id": "medium_reasoning",
+      "prompt_tokens": 57,
+      "ttft_ms": 264.99,
+      "prefill_tps": 259.6,
+      "decode_tok_s": 27.3,
+      "output_tokens": 400,
+      "peak_memory_gb": 18.594,
+      "wall_time_s": 14.941,
+      "output_text": "When a Spark job on a 100-node cluster is taking three times longer than its Service Level Agreement (SLA), it's critical to diagnose and address the issue promptly. Here are the first five diagnostic steps I would take:\n\n1. **Check Job Metrics and Logs:**\n   - Start by examining the Spark job metrics and logs to understand where the job is spending most of its time. Look for any error messages or warnings that might indicate issues like data skew, resource contention, or other anomalies.\n   - Use the Spark UI to analyze the job stages, tasks, and their execution times. Identify any stages or tasks that are disproportionately slow.\n\n2. **Analyze Resource Utilization:**\n   - Check the resource utilization of the cluster nodes, including CPU, memory, and disk I/O. Tools like Ganglia, Prometheus, or the YARN ResourceManager UI can provide insights.\n   - Look for any nodes that are underutilized or overloaded, which might indicate a misallocation of resources or a bottleneck.\n\n3. **Examine Data Skew:**\n   - Data skew can significantly impact job performance. Analyze the data distribution across partitions to see if some partitions are much larger than others.\n   - Use Spark's shuffle and aggregation operations to identify any skew. If skew is detected, consider strategies like bucketing or using a more balanced partitioning strategy.\n\n4. **Review Network Traffic:**\n   - High network latency or bandwidth issues can slow down Spark jobs, especially in distributed environments.\n   - Use network monitoring tools to check for any unusual network traffic patterns or high latency between nodes. This can help identify if network congestion is a contributing factor to the job's performance.\n\n5. **Check for External Dependencies:**\n   - If the Spark job relies on external systems (like databases, message queues, or other services), ensure that these systems are performing as expected.\n   - Monitor the health and performance of these external systems and check for any delays or errors that could"
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Qwen2.5-32B-Instruct-4bit",
+      "prompt_id": "long_generation",
+      "prompt_tokens": 48,
+      "ttft_ms": 264.24,
+      "prefill_tps": 221.0,
+      "decode_tok_s": 26.9,
+      "output_tokens": 600,
+      "peak_memory_gb": 18.662,
+      "wall_time_s": 22.59,
+      "output_text": "### Kafka Consumer Lag Alert Runbook\n\n#### Overview\nThis runbook outlines the steps to diagnose and resolve issues related to Kafka consumer lag alerts. Kafka consumer lag occurs when the rate at which messages are being produced exceeds the rate at which they are being consumed, leading to a backlog of messages in the Kafka topic.\n\n#### Symptoms\n- **Alerts**: Automated alerts from monitoring tools indicating that the lag between the consumer and the producer has exceeded a predefined threshold.\n- **Performance Issues**: Applications relying on Kafka data may experience delays or timeouts.\n- **System Logs**: Logs may show increased latency or errors related to message processing.\n\n#### Root Causes\n1. **Consumer Throttling**: The consumer is not processing messages fast enough.\n2. **Consumer Failure**: A consumer instance may have failed or is not functioning correctly.\n3. **Increased Message Rate**: The rate of message production has increased, overwhelming the current consumer capacity.\n4. **Consumer Configuration**: Misconfiguration of consumer settings, such as batch size or fetch size.\n5. **Resource Constraints**: Insufficient CPU, memory, or network resources for the consumer to process messages efficiently.\n\n#### Remediation Steps\n\n1. **Initial Assessment**\n   - **Check Alerts**: Confirm the alert details and the current lag value.\n   - **Monitor Consumer Group**: Use Kafka tools like `kafka-consumer-groups.sh` to check the status of the consumer group and identify the lag.\n     ```bash\n     kafka-consumer-groups.sh --bootstrap-server <broker_address> --group <consumer_group> --describe\n     ```\n\n2. **Identify the Root Cause**\n   - **Consumer Throttling**: Check the consumer logs for any throttling messages or errors.\n   - **Consumer Failure**: Verify the health of the consumer instances. Check for any failed or unresponsive instances.\n   - **Increased Message Rate**: Compare the current message rate with historical data to see if there has been a recent spike.\n   - **Consumer Configuration**: Review the consumer configuration settings to ensure they are optimized for the current load.\n   - **Resource Constraints**: Monitor the system resources (CPU, memory, network) to identify any constraints.\n\n3. **Immediate Actions**\n   - **Restart Consumers**: If a consumer instance has failed, restart it.\n   - **Increase Consumer Capacity**: If the issue is due to increased message rate, consider scaling up the number of consumer instances.\n   - **Optimize Configuration**: Adjust the consumer settings such as batch size, fetch size, and concurrency to improve processing speed.\n   - **Resource Allocation**: If resource constraints are identified, allocate more resources to the consumer instances.\n\n4. **Long-term Actions**\n   - **Monitor and Adjust**: Continuously monitor the consumer lag and adjust the consumer capacity and configurations as needed.\n   - **Performance Tuning**: Perform regular performance tuning to ensure the system can handle expected loads.\n   - **Alert Thresholds**: Review and adjust alert thresholds based on the system's performance and capacity"
+    }
+  ]
+}

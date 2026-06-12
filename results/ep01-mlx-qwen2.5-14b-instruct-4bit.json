@@ -1,0 +1,46 @@
+{
+  "run_at": "2026-06-11T21:48:43.483407+00:00",
+  "engine": "mlx",
+  "model_id": "mlx-community/Qwen2.5-14B-Instruct-4bit",
+  "results": [
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Qwen2.5-14B-Instruct-4bit",
+      "prompt_id": "short_factual",
+      "prompt_tokens": 37,
+      "ttft_ms": 149.25,
+      "prefill_tps": 357.2,
+      "decode_tok_s": 60.1,
+      "output_tokens": 79,
+      "peak_memory_gb": 8.444,
+      "wall_time_s": 1.465,
+      "output_text": "Apple Silicon refers to Apple's custom-designed processors, like the M1, M2, etc., used in Macs and other devices. Unified memory is a key feature where all system memory is shared between the CPU and GPU, improving data transfer efficiency. For AI workloads, this reduces the need to move data between different memory types, speeding up computations and making AI tasks more efficient."
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Qwen2.5-14B-Instruct-4bit",
+      "prompt_id": "medium_reasoning",
+      "prompt_tokens": 57,
+      "ttft_ms": 149.6,
+      "prefill_tps": 539.1,
+      "decode_tok_s": 59.7,
+      "output_tokens": 400,
+      "peak_memory_gb": 8.485,
+      "wall_time_s": 6.853,
+      "output_text": "Certainly! Diagnosing a Spark job that's running slower than expected involves a systematic approach to identify the root cause. Here are the first five diagnostic steps you should take:\n\n### Step 1: Review the Job Metrics and Logs\n- **Spark UI**: Use the Spark UI to review the job's execution timeline, stages, and tasks. Look for any stages that are taking significantly longer than others.\n- **Driver and Executor Logs**: Check the logs for any exceptions or warnings. Look for any errors or warnings that might indicate issues such as serialization failures, classpath issues, or other runtime errors.\n- **YARN ResourceManager UI**: If you're running Spark on YARN, check the ResourceManager UI to see if there are any issues with resource allocation or container failures.\n\n### Step 2: Analyze the Data and Workload\n- **Data Skew**: Check if the data is evenly distributed across partitions. Data skew can cause some partitions to take much longer to process than others.\n- **Workload Distribution**: Ensure that the workload is evenly distributed across the cluster. Look for any signs of imbalance in the workload distribution.\n- **Data Size**: Verify if the data size has changed recently. An increase in data size can cause the job to take longer.\n\n### Step 3: Check Cluster Resources\n- **CPU and Memory Utilization**: Use the YARN ResourceManager UI or other monitoring tools to check the CPU and memory utilization of the cluster. Look for any signs of resource contention or underutilization.\n- **Disk I/O**: Check the disk I/O metrics to see if there are any bottlenecks. High I/O wait times can significantly impact job performance.\n- **Network Latency**: Monitor network latency and bandwidth usage. High network latency can cause delays in data transfer between nodes.\n\n### Step 4: Investigate Configuration Settings\n- **Spark Configuration**: Review the Spark configuration settings such as `spark.executor.memory`, `spark.driver.memory`, `spark.executor.cores`,"
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Qwen2.5-14B-Instruct-4bit",
+      "prompt_id": "long_generation",
+      "prompt_tokens": 48,
+      "ttft_ms": 152.65,
+      "prefill_tps": 453.8,
+      "decode_tok_s": 59.3,
+      "output_tokens": 600,
+      "peak_memory_gb": 8.507,
+      "wall_time_s": 10.271,
+      "output_text": "### Kafka Consumer Lag Alert Runbook\n\n#### Overview\nThis runbook outlines the steps to be taken when a Kafka consumer lag alert is triggered. Consumer lag indicates that the consumer is falling behind the producer, which can lead to data loss or delayed processing. Immediate action is required to prevent data loss and ensure smooth operation of the system.\n\n#### Symptoms\n- **Alert Trigger**: An alert is triggered when the consumer lag exceeds a predefined threshold (e.g., 1000 messages).\n- **Monitoring Tools**: Tools like Prometheus, Grafana, or custom monitoring scripts may indicate high consumer lag.\n- **Logs**: Consumer logs may show repeated warnings or errors related to message processing delays.\n- **Service Performance**: End-users may report delays in data processing or system performance degradation.\n\n#### Root Causes\n- **Increased Message Volume**: A sudden spike in the number of messages being produced.\n- **Consumer Processing Bottlenecks**: Slow processing of messages due to inefficient code or resource constraints.\n- **Consumer Failures**: Consumers may be failing to acknowledge messages properly, leading to repeated processing.\n- **Network Issues**: Network latency or connectivity issues between the consumer and the Kafka broker.\n- **Resource Limitations**: Insufficient CPU, memory, or I/O resources on the consumer side.\n\n#### Remediation Steps\n1. **Initial Assessment**\n   - **Check Alert Details**: Review the alert details to understand the specific consumer group and topic experiencing lag.\n   - **Monitor Metrics**: Use monitoring tools to check the current consumer lag and message throughput.\n\n2. **Immediate Actions**\n   - **Increase Consumer Parallelism**: If the consumer is running on a single thread, consider increasing the number of consumer threads or partitions to distribute the load.\n   - **Check Consumer Logs**: Review consumer logs for any errors or warnings that might indicate issues with message processing.\n   - **Network Diagnostics**: Run network diagnostics to check for any connectivity issues between the consumer and the Kafka broker.\n\n3. **Intermediate Actions**\n   - **Optimize Consumer Code**: Review the consumer code for any inefficiencies or bottlenecks. Optimize the code to improve message processing speed.\n   - **Scale Resources**: If the consumer is running on a resource-constrained environment, scale up the resources (CPU, memory) to handle the increased load.\n   - **Adjust Consumer Configuration**: Adjust consumer settings such as `max.poll.records` and `fetch.min.bytes` to optimize message fetching and processing.\n\n4. **Long-term Actions**\n   - **Implement Backpressure Handling**: Implement backpressure handling mechanisms to prevent the consumer from falling behind when message volume spikes.\n   - **Improve Monitoring**: Enhance monitoring to include more detailed metrics on consumer performance and message processing times.\n   - **Review and Optimize**: Periodically review consumer performance and optimize as necessary to prevent future lag issues.\n\n#### Escalation Criteria\n- **Immediate Escalation**: If the consumer lag does not decrease after initial actions and the alert remains active for"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "run_at": "2026-06-12T02:34:03.256349+00:00",
+  "engine": "mlx",
+  "model_id": "mlx-community/Mistral-Large-Instruct-2407-4bit",
+  "results": [
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Mistral-Large-Instruct-2407-4bit",
+      "prompt_id": "short_factual",
+      "prompt_tokens": 37,
+      "ttft_ms": 5621.66,
+      "prefill_tps": 6.6,
+      "decode_tok_s": 7.7,
+      "output_tokens": 113,
+      "peak_memory_gb": 69.102,
+      "wall_time_s": 20.204,
+      "output_text": " Apple Silicon is Apple's series of ARM-based system on chips (SoCs) designed for Mac computers. Unified memory matters for AI workloads because it allows the CPU, GPU, and other processors to access the same pool of memory simultaneously and efficiently. This shared memory architecture reduces data transfer overhead, enabling faster processing and improved performance for AI tasks that require high-speed data access and manipulation. Additionally, unified memory allows for more efficient use of system resources, as memory is dynamically allocated where it's needed most."
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Mistral-Large-Instruct-2407-4bit",
+      "prompt_id": "medium_reasoning",
+      "prompt_tokens": 56,
+      "ttft_ms": 3902.02,
+      "prefill_tps": 14.4,
+      "decode_tok_s": 5.6,
+      "output_tokens": 389,
+      "peak_memory_gb": 69.167,
+      "wall_time_s": 73.449,
+      "output_text": " Certainly! Here are the first five diagnostic steps I would take to troubleshoot a Spark job that is taking 3x longer than its SLA on a 100-node cluster:\n\n1. **Check Job and Stage Details:**\n   - Use the Spark UI to examine the job and stage details. Look for any stages that are taking significantly longer than expected.\n   - Identify if there are any stages with a high number of failed tasks or retries.\n\n2. **Analyze Resource Utilization:**\n   - Check the resource utilization on the cluster. Look at CPU, memory, disk I/O, and network usage.\n   - Use tools like Ganglia, Grafana, or the cluster's monitoring system to identify any resource bottlenecks.\n\n3. **Examine Executor Logs:**\n   - Review the logs from the Spark executors for any error messages, warnings, or indications of performance issues.\n   - Look for common issues like garbage collection (GC) pauses, out-of-memory errors, or network timeouts.\n\n4. **Inspect Data Skew:**\n   - Check for data skew by examining the distribution of data across partitions.\n   - Use the Spark UI to look at the input and output sizes for each task and identify any tasks with disproportionately large amounts of data.\n\n5. **Evaluate Cluster Health:**\n   - Verify the health of the cluster nodes. Check for any node failures, network issues, or hardware problems.\n   - Ensure that all nodes are properly configured and that there are no misconfigurations or resource contention issues.\n\nBy following these steps, you can gather crucial information to diagnose the root cause of the performance issue and take appropriate actions to resolve it."
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Mistral-Large-Instruct-2407-4bit",
+      "prompt_id": "long_generation",
+      "prompt_tokens": 49,
+      "ttft_ms": 4379.77,
+      "prefill_tps": 11.2,
+      "decode_tok_s": 5.7,
+      "output_tokens": 600,
+      "peak_memory_gb": 69.26,
+      "wall_time_s": 110.023,
+      "output_text": " # Kafka Consumer Lag Alert Runbook\n\n## Purpose\nThis runbook outlines the steps to respond to a Kafka consumer lag alert, which indicates that a consumer is falling behind in processing messages from a Kafka topic.\n\n## Symptoms\n- Increased consumer lag metrics in monitoring tools (e.g., Prometheus, Grafana, Datadog).\n- Delays in data processing or downstream system updates.\n- Increased processing time for messages.\n\n## Root Causes\n1. **Consumer Processing Issues:**\n   - Slow processing logic.\n   - Inadequate resource allocation (CPU, memory).\n   - Inefficient error handling or retries.\n\n2. **Producer Issues:**\n   - High message production rate.\n   - Increased message size.\n\n3. **Kafka Broker Issues:**\n   - Network latency or packet loss.\n   - Broker overload or resource exhaustion.\n   - Partition imbalance.\n\n4. **Configuration Issues:**\n   - Suboptimal consumer configuration (e.g., `fetch.min.bytes`, `fetch.max.wait.ms`, `max.poll.records`).\n   - Inadequate topic partitioning.\n\n## Remediation Steps\n\n### 1. Acknowledge the Alert\n- Acknowledge the alert in the monitoring system to silence notifications and indicate that the issue is being addressed.\n\n### 2. Gather Information\n- Identify the affected consumer group, topic, and partitions.\n- Check the current lag, processing rate, and historical trends.\n- Review consumer and broker logs for any errors or warnings.\n\n### 3. Check Consumer Health\n- Verify that all consumer instances are running and healthy.\n- Check resource usage (CPU, memory) on consumer instances.\n- Review consumer configuration for any recent changes.\n\n### 4. Check Producer Health\n- Verify the message production rate.\n- Check for any recent changes in message size or format.\n\n### 5. Check Kafka Broker Health\n- Verify broker resource usage and network connectivity.\n- Check for any broker errors or warnings.\n- Review partition assignment and balance.\n\n### 6. Optimize Consumer Configuration\n- Tune `fetch.min.bytes`, `fetch.max.wait.ms`, and `max.poll.records` based on processing capacity and network latency.\n- Consider increasing `session.timeout.ms` and `heartbeat.interval.ms` to prevent unnecessary rebalances.\n\n### 7. Scale Consumer Group\n- Increase the number of consumer instances to distribute the load.\n- Ensure that the number of consumer instances does"
+    }
+  ]
+}

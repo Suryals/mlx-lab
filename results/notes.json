@@ -1,0 +1,14 @@
+{
+  "ceiling": {
+    "total_memory_gb": 137.4,
+    "advertised_working_set_gb": 115.4,
+    "max_single_buffer_gb": 86.6,
+    "probed_to_gb": 128.0,
+    "refused": false,
+    "finding": "Metal's recommended working set (115.4GB) is a soft limit. MLX allocated 128GB on a 137GB machine without refusing; the probe stopped at its own 125GB safety cap, not a failure. The real ceiling is ~physical RAM minus OS overhead, not the advertised number."
+  },
+  "cut_loose": [
+    {"model_slug": "qwen2.5-72b-instruct-8bit", "params_b": 72, "quant_bits": 8,
+     "reason": "download failed 3x (xet hang, read timeout, connection drop); cut loose. The 4-bit ladder already covers the curve."}
+  ]
+}

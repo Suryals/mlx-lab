@@ -1,0 +1,46 @@
+{
+  "run_at": "2026-06-11T23:59:51.373287+00:00",
+  "engine": "mlx",
+  "model_id": "mlx-community/Llama-3.3-70B-Instruct-4bit",
+  "results": [
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Llama-3.3-70B-Instruct-4bit",
+      "prompt_id": "short_factual",
+      "prompt_tokens": 60,
+      "ttft_ms": 1581.44,
+      "prefill_tps": 38.2,
+      "decode_tok_s": 13.0,
+      "output_tokens": 200,
+      "peak_memory_gb": 39.871,
+      "wall_time_s": 16.951,
+      "output_text": "Apple Silicon refers to Apple's system-on-a-chip (SoC) designs, which integrate CPU, GPU, and other components into a single chip. Unified memory, a key feature of Apple Silicon, allows all components to access a shared pool of memory, eliminating the need for data copying and reducing memory latency.\n\nFor AI workloads, unified memory matters because it:\n\n1. **Improves performance**: By reducing memory access latency and eliminating data copying, unified memory accelerates AI computations, such as matrix multiplications and convolutions.\n2. **Increases efficiency**: Shared memory reduces memory usage and power consumption, making AI workloads more efficient and suitable for mobile and edge devices.\n3. **Enhances data transfer**: Unified memory enables faster data transfer between CPU, GPU, and other components, which is critical for AI applications that rely on large datasets and complex computations.\n\nOverall, Apple Silicon's unified memory architecture is optimized for AI and machine learning workloads, enabling faster, more efficient, and more"
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Llama-3.3-70B-Instruct-4bit",
+      "prompt_id": "medium_reasoning",
+      "prompt_tokens": 78,
+      "ttft_ms": 1994.55,
+      "prefill_tps": 39.3,
+      "decode_tok_s": 10.7,
+      "output_tokens": 400,
+      "peak_memory_gb": 39.883,
+      "wall_time_s": 39.553,
+      "output_text": "Here are my first 5 diagnostic steps to troubleshoot the Spark job performance issue:\n\n**Step 1: Review Job History and Metrics (5 minutes)**\nI'll start by checking the Spark job history and metrics to understand the job's execution timeline, stages, and tasks. I'll use tools like Spark UI, Ganglia, or Prometheus to gather data on:\n\t* Job duration, start, and end times\n\t* Stage and task execution times\n\t* Number of tasks, records processed, and data read/written\n\t* Any errors or warnings reported during execution\n\nThis will give me a high-level understanding of where the job is spending most of its time and if there are any obvious bottlenecks.\n\n**Step 2: Check Cluster Utilization and Resource Allocation (10 minutes)**\nNext, I'll investigate the cluster utilization and resource allocation to ensure that the job has sufficient resources to execute efficiently. I'll check:\n\t* Node utilization (CPU, memory, disk) using tools like Ganglia or Prometheus\n\t* Resource allocation for the job (e.g., number of executors, cores, memory)\n\t* If there are any other resource-intensive jobs running concurrently that might be competing for resources\n\nThis will help me determine if the cluster is overloaded or if the job is not allocated sufficient resources.\n\n**Step 3: Analyze Spark Configuration and Tuning (15 minutes)**\nI'll review the Spark configuration and tuning parameters to ensure they are optimal for the job. I'll check:\n\t* Spark properties (e.g., `spark.executor.memory`, `spark.driver.memory`, `spark.executor.cores`)\n\t* Parallelism settings (e.g., `spark.default.parallelism`, `spark.shuffle.parallelism`)\n\t* Any custom tuning parameters or configurations\n\nThis will help me identify if there are any suboptimal configurations that might be contributing to the performance issue.\n\n**Step 4: Investigate Data Skew and Partitioning (20 minutes)"
+    },
+    {
+      "engine": "mlx",
+      "model_id": "mlx-community/Llama-3.3-70B-Instruct-4bit",
+      "prompt_id": "long_generation",
+      "prompt_tokens": 71,
+      "ttft_ms": 1927.89,
+      "prefill_tps": 37.0,
+      "decode_tok_s": 9.0,
+      "output_tokens": 600,
+      "peak_memory_gb": 39.961,
+      "wall_time_s": 68.498,
+      "output_text": "**Kafka Consumer Lag Alert Runbook**\n\n**Symptoms:**\n\n* The Kafka consumer lag alert is triggered, indicating that one or more consumer partitions are falling behind the producer's write rate.\n* The consumer lag metric exceeds the defined threshold (e.g., 1000 messages or 10 minutes).\n* Consumers may be experiencing increased latency or errors when processing messages.\n\n**Root Causes:**\n\n1. **Insufficient Consumer Resources**:\n\t* Under-provisioned consumer instances or partitions.\n\t* Inadequate CPU, memory, or network resources.\n2. **Poor Consumer Configuration**:\n\t* Incorrect or suboptimal configuration of consumer settings, such as:\n\t\t+ `fetch.min.bytes`\n\t\t+ `fetch.max.wait.ms`\n\t\t+ `max.partition.fetch.bytes`\n\t\t+ `max.poll.records`\n3. **High-Volume or Large-Message Producers**:\n\t* Producers sending high volumes of messages or large messages, overwhelming the consumer.\n4. **Network Issues**:\n\t* Network connectivity problems or high latency between the consumer and Kafka broker.\n5. **Consumer Application Issues**:\n\t* Bugs or performance issues in the consumer application, causing it to process messages slowly or incorrectly.\n6. **Kafka Broker Issues**:\n\t* Kafka broker performance problems, such as high latency or errors, affecting the consumer's ability to fetch messages.\n\n**Remediation Steps:**\n\n1. **Verify Consumer Configuration**:\n\t* Review consumer settings to ensure they are optimal for the workload.\n\t* Adjust configuration as needed to improve performance.\n2. **Scale Consumer Resources**:\n\t* Increase the number of consumer instances or partitions to handle the workload.\n\t* Upgrade consumer instance resources (e.g., CPU, memory, network) if necessary.\n3. **Optimize Producer Settings**:\n\t* Adjust producer settings to reduce the volume or size of messages, if possible.\n\t* Implement batching or compression to reduce the number of messages.\n4. **Investigate Network Issues**:\n\t* Check network connectivity and latency between the consumer and Kafka broker.\n\t* Resolve any network-related problems or optimize network settings.\n5. **Debug Consumer Application**:\n\t* Investigate the consumer application for performance issues or bugs.\n\t* Optimize the application to process messages more efficiently.\n6. **Kafka Broker Maintenance**:\n\t* Check Kafka broker performance and logs for issues.\n\t* Perform maintenance tasks, such as restarting brokers or adjusting broker settings.\n\n**Escalation Criteria:**\n\n1. **Prolonged Lag**:\n\t* If the consumer lag persists for an extended period (e.g., > 30 minutes) despite remediation efforts.\n2. **Increasing Lag**:\n\t* If the consumer lag continues to increase despite remediation efforts.\n3. **Multiple Consumer Groups Affected**:\n\t* If multiple consumer groups are experiencing lag, indicating a broader issue.\n4. **Kafka Cluster Inst"
+    }
+  ]
+}

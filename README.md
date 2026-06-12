@@ -9,8 +9,28 @@ Build-in-public project. Each episode = a reproducible experiment + an X thread 
 
 | # | Focus | Status |
 |---|-------|--------|
-| [Ep 01](content/ep01-portfolio.md) | Raw speed/memory benchmark: MLX vs LM Studio | 🔨 In progress |
-| Ep 02 | Agent / tool-use correctness eval | Planned |
+| [Ep 01](content/ep01-portfolio.md) | Raw speed/memory benchmark (3B + 7B) | ✅ Done |
+| [Ep 02](content/ep02-portfolio.md) | How far can one Mac go? Ladder to 123B + memory-ceiling probe | ✅ Done |
+| Ep 03 | Agent / tool-use correctness eval | Planned |
+
+## Episode 2 — the scaling ladder (M5 Max, 128GB)
+
+| Params | Decode | TTFT | Peak RAM |
+|--------|--------|------|---------|
+| 3.2B | 227 tok/s | 89ms | 2.1GB |
+| 7.6B | 117 tok/s | 115ms | 4.5GB |
+| 14B | 60 tok/s | 151ms | 8.5GB |
+| 32B | 27 tok/s | 326ms | 18.6GB |
+| 70B | 11 tok/s | 1.8s | 39.9GB |
+| 123B | 6.3 tok/s | 4.6s | 69.2GB |
+
+A 123B model ran in 69GB. The memory probe allocated to 128GB without Metal refusing — the advertised
+115GB "recommended working set" is a soft limit, not a wall. Full writeup: [content/ep02-portfolio.md](content/ep02-portfolio.md).
+
+```bash
+uv run python bench/run_ladder.py      # the full ladder
+uv run python bench/probe_ceiling.py   # the memory ceiling probe
+```
 
 ## Reproduce Episode 1
 

@@ -1,0 +1,10 @@
+{
+  "probed_at": "2026-06-12T17:26:33.273892+00:00",
+  "device_name": "Apple M5 Max",
+  "total_memory_gb": 137.4,
+  "advertised_working_set_gb": 115.4,
+  "max_single_buffer_gb": 86.6,
+  "empirical_ceiling_gb": null,
+  "hit_safety_cap": true,
+  "fail_reason": null
+}
