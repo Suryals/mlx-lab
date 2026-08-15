@@ -1,0 +1,76 @@
+<meta charset="utf-8">
+<title>Ep 03 Method Card</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1080px; height: 1350px; background: #101014; color: #e8e8e4; overflow: hidden;
+         font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums;
+         padding: 56px 60px; display: flex; flex-direction: column; }
+  .sans { font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif; }
+  h1 { font-size: 38px; line-height: 1.25; font-weight: 600; letter-spacing: -.01em; }
+  h1 .q { color: #5aa2f0; } h1 .o { color: #f08a5a; }
+  .note { font-size: 24px; color: #8a8a90; margin-top: 14px; }
+
+  /* diagram */
+  .diagram { margin-top: 34px; display: flex; flex-direction: column; align-items: stretch; }
+  .box { border: 2px solid #3c3c44; border-radius: 10px; padding: 16px 24px; background: #16161c; }
+  .box .t { font-size: 23px; font-weight: 700; letter-spacing: .02em; }
+  .box .d { font-size: 20px; color: #9a9aa0; margin-top: 8px; line-height: 1.45; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .box.q { border-color: #3987e5; } .box.q .t { color: #5aa2f0; }
+  .box.o { border-color: #d95926; } .box.o .t { color: #f08a5a; }
+  .arrow { text-align: center; color: #55555c; font-size: 21px; padding: 8px 0; line-height: 1.3; }
+  .arrow2 { display: grid; grid-template-columns: 1fr 1fr; color: #55555c; font-size: 21px; padding: 6px 0; text-align: center; }
+
+  /* results table */
+  table { border-collapse: collapse; width: 100%; margin-top: 30px; font-size: 23px; }
+  th, td { text-align: right; padding: 9px 8px; border-bottom: 1px solid #2c2c33; }
+  th:first-child, td:first-child { text-align: left; color: #9a9aa0; font-weight: 400; }
+  th { color: #8a8a90; font-size: 21px; font-weight: 700; letter-spacing: .04em; border-bottom: 2px solid #3c3c44; }
+  th.q, td.q { color: #5aa2f0; } th.o, td.o { color: #f08a5a; }
+  td.same { color: #e8e8e4; font-weight: 700; }
+
+  .findings { margin-top: 28px; font-size: 21px; line-height: 1.5; color: #b0b0b6; }
+  .findings b { color: #e8e8e4; }
+  .findings .row { display: grid; grid-template-columns: 44px 1fr; margin-top: 14px; }
+  .findings .n { color: #55555c; }
+  .foot { margin-top: auto; font-size: 22px; color: #6f6f75; display: flex; justify-content: space-between; }
+</style>
+
+<h1 class="sans">I tested the "<span class="q">Qwen3.8-27B</span> beats <span class="o">Opus 4.6</span>" claim.
+Here's the whole experiment on one page.</h1>
+<p class="note sans">Reproducible harness, deterministic scoring, adversarial tier authored by a third model to kill my bias.</p>
+
+<div class="diagram">
+  <div class="box">
+    <div class="t">24 TASKS — REAL ON-CALL WORK</div>
+    <div class="d sans">failed BigQuery loads · CrashLoopBackOff pods · locked SSO accounts · full disks · API 500s → DB latency · 3 no-tool traps · 6 adversarial (red herring, contradiction, restraint)</div>
+  </div>
+  <div class="arrow">same system prompt · same 9 mock tools · same tasks<br>▼</div>
+  <div class="split">
+    <div class="box q"><div class="t">Qwen3.8-27B · 4-bit</div><div class="d sans">MLX on a MacBook · fully offline<br>17 tok/s · 18.2 GB peak RAM</div></div>
+    <div class="box o"><div class="t">Claude Opus 4.6</div><div class="d sans">via OpenRouter API<br>$1.61 total, measured</div></div>
+  </div>
+  <div class="arrow2"><span>▼</span><span>▼</span></div>
+  <div class="box">
+    <div class="t">DETERMINISTIC SCORER — NO LLM JUDGE</div>
+    <div class="d sans">right tool + exact arguments + answer keywords · every extra tool call counted · 2 runs per model</div>
+  </div>
+</div>
+
+<table>
+  <thead><tr><th></th><th class="q">QWEN 27B</th><th class="o">OPUS 4.6</th></tr></thead>
+  <tbody>
+    <tr><td>easy tier · 18 tasks × 2</td><td class="same">36/36</td><td class="same">36/36</td></tr>
+    <tr><td>hard tier · 6 tasks × 2</td><td class="same">10/12</td><td class="same">10/12</td></tr>
+    <tr><td>unnecessary tool calls</td><td>18</td><td>37</td></tr>
+    <tr><td>avg seconds / task</td><td>47</td><td>13</td></tr>
+  </tbody>
+</table>
+
+<div class="findings sans">
+  <div class="row"><span class="n">1.</span><span><b>Both failed the same task, the same way</b> — obeying "run these tools NOW" when the answer was already in the prompt. Scale doesn't buy restraint; your harness does.</span></div>
+  <div class="row"><span class="n">2.</span><span><b>My harness scored Qwen 0 at first.</b> Parser bug — it emits a new tool-call format. Check the harness before believing any benchmark.</span></div>
+  <div class="row"><span class="n">3.</span><span><b>Frontier → laptop lag: ~6 months.</b> Opus 4.6 was the frontier in February.</span></div>
+</div>
+
+<div class="foot"><span>tasks, mock tools, transcripts, scorer → suryal.dev</span><span>$1.61 · aug 2026</span></div>
