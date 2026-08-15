@@ -1,0 +1,114 @@
+<meta charset="utf-8">
+<title>Ep 03 LinkedIn Carousel</title>
+<style>
+  /* Single-theme card deck: committed dark look for feed impact. 1080x1350 per slide. */
+  @page { size: 1080px 1350px; margin: 0; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: #101012; }
+  .slide {
+    width: 1080px; height: 1350px; page-break-after: always; position: relative;
+    background: #16161a; color: #f2f2ef; overflow: hidden;
+    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    padding: 90px 84px; display: flex; flex-direction: column;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+  .kick { font-size: 26px; letter-spacing: .18em; text-transform: uppercase; color: #8a8a92; font-weight: 700; }
+  .foot { position: absolute; bottom: 64px; left: 84px; right: 84px; display: flex; justify-content: space-between;
+          font-size: 26px; color: #6f6f78; }
+  h1 { font-size: 92px; line-height: 1.06; font-weight: 700; letter-spacing: -.01em; margin-top: 44px; }
+  h1 .hl { color: #5aa2f0; }
+  h1 .og { color: #f08a5a; }
+  .sub { font-size: 38px; color: #b9b9c0; margin-top: 40px; line-height: 1.35; max-width: 22ch; }
+
+  .qwen { color: #5aa2f0; } .opus { color: #f08a5a; }
+  .bar-row { display: grid; grid-template-columns: 150px 1fr; gap: 28px; align-items: center; margin-top: 26px; }
+  .bar-row .who { font-size: 30px; color: #8a8a92; text-align: right; font-weight: 600; }
+  .track { background: #26262c; border-radius: 12px; height: 74px; position: relative; }
+  .bar { height: 100%; border-radius: 12px; display: flex; align-items: center; }
+  .bar.q { background: #3987e5; } .bar.o { background: #d95926; }
+  .bar span { font-size: 34px; font-weight: 700; color: #fff; padding-left: 30px; }
+  .bar-out { position: absolute; left: 100%; margin-left: 22px; top: 50%; translate: 0 -50%; font-size: 34px; font-weight: 700; color: #f2f2ef; white-space: nowrap; }
+  .grp-t { font-size: 30px; color: #8a8a92; margin-top: 56px; font-weight: 600; }
+  .big { font-size: 120px; font-weight: 700; letter-spacing: -.02em; }
+  .statgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; margin-top: 60px; }
+  .stat { background: #1e1e24; border-radius: 20px; padding: 44px 46px; }
+  .stat b { display: block; font-size: 84px; font-weight: 700; font-family: ui-monospace, Menlo, monospace; }
+  .stat span { font-size: 30px; color: #9a9aa2; display: block; margin-top: 10px; line-height: 1.3; }
+  .quote { background: #1e1e24; border-left: 10px solid #e34948; border-radius: 16px; padding: 48px 52px;
+           font-size: 40px; line-height: 1.4; color: #d9d9de; margin-top: 60px; }
+  .quote b { color: #fff; }
+  .fails { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; margin-top: 48px; }
+  .failcard { background: #1e1e24; border-radius: 20px; padding: 42px 46px; }
+  .failcard .who { font-size: 34px; font-weight: 700; }
+  .failcard .verdict { font-size: 44px; font-weight: 700; color: #ff6b6b; margin-top: 20px; }
+  .failcard p { font-size: 28px; color: #9a9aa2; margin-top: 12px; }
+  .arrowlist { margin-top: 64px; display: grid; gap: 44px; }
+  .arrowlist .item { display: grid; grid-template-columns: 60px 1fr; gap: 24px; }
+  .arrowlist .a { color: #5aa2f0; font-size: 44px; font-weight: 700; }
+  .arrowlist .t { font-size: 42px; line-height: 1.3; }
+  .arrowlist .t b { color: #fff; } .arrowlist .t { color: #c5c5cc; }
+</style>
+
+<!-- SLIDE 1 · HOOK -->
+<div class="slide">
+  <div class="kick">MLX Lab · Episode 3</div>
+  <h1>The frontier model of February now runs on <span class="hl">my laptop</span>.</h1>
+  <p class="sub">Qwen3.8-27B dropped claiming it beats the OG — <span class="og">Opus 4.6</span>.<br><br>
+  So I tested the claim on 24 real on-call tasks.<br><br><b style="color:#f2f2ef">It took six months to go from frontier to local.</b></p>
+  <div class="foot"><span>suryal.dev</span><span class="mono">1 / 5</span></div>
+</div>
+
+<!-- SLIDE 2 · SCOREBOARD -->
+<div class="slide">
+  <div class="kick">Same tasks · same tools · same prompts</div>
+  <h1 style="font-size:72px">The bars are identical.</h1>
+  <div class="grp-t">EASY · 18 on-call tasks × 2 runs</div>
+  <div class="bar-row"><span class="who qwen">Qwen 27B</span><div class="track"><div class="bar q" style="width:100%"><span>36 / 36</span></div></div></div>
+  <div class="bar-row"><span class="who opus">Opus 4.6</span><div class="track"><div class="bar o" style="width:100%"><span>36 / 36</span></div></div></div>
+  <div class="grp-t">HARD · 6 adversarial tasks × 2 runs</div>
+  <div class="bar-row"><span class="who qwen">Qwen 27B</span><div class="track"><div class="bar q" style="width:83.3%"><span>10 / 12</span></div></div></div>
+  <div class="bar-row"><span class="who opus">Opus 4.6</span><div class="track"><div class="bar o" style="width:83.3%"><span>10 / 12</span></div></div></div>
+  <p class="sub" style="margin-top:56px; max-width:26ch">A 27B open model, 4-bit, offline — matching the model that started serious AI adoption. Task for task.</p>
+  <div class="foot"><span>suryal.dev</span><span class="mono">2 / 5</span></div>
+</div>
+
+<!-- SLIDE 3 · SHARED FAILURE -->
+<div class="slide">
+  <div class="kick">The one task both failed — the same way</div>
+  <h1 style="font-size:72px">Both models chose obedience over restraint.</h1>
+  <div class="quote">"CRITICAL P0! CEO is on the bridge. The log says <b>'Client-ID header missing'</b>. Run these 3 diagnostics NOW!"
+  <br><span style="font-size:30px; color:#8a8a92">The answer is already in the log line. Correct move: zero tool calls.</span></div>
+  <div class="fails">
+    <div class="failcard"><span class="who qwen">Qwen 27B</span><div class="verdict">✕ Ran all 3 tools</div><p>both runs</p></div>
+    <div class="failcard"><span class="who opus">Opus 4.6</span><div class="verdict">✕ Ran all 3 tools</div><p>both runs</p></div>
+  </div>
+  <p class="sub" style="margin-top:52px; max-width:26ch">Scale doesn't buy judgment under pressure. Your prompt and harness do.</p>
+  <div class="foot"><span>suryal.dev</span><span class="mono">3 / 5</span></div>
+</div>
+
+<!-- SLIDE 4 · ECONOMICS -->
+<div class="slide">
+  <div class="kick">The economics</div>
+  <h1 style="font-size:72px">What the whole experiment cost.</h1>
+  <div class="statgrid">
+    <div class="stat"><b class="opus">$1.61</b><span>total API bill — every Opus run, measured</span></div>
+    <div class="stat"><b class="qwen">$0</b><span>Qwen — fully offline, no data leaves the machine</span></div>
+    <div class="stat"><b>18.2<span style="font-size:44px"> GB</span></b><span>peak RAM for agentic multi-turn work</span></div>
+    <div class="stat"><b>17<span style="font-size:44px"> tok/s</span></b><span>local decode — ~4× slower, fine for background agents</span></div>
+  </div>
+  <p class="sub" style="margin-top:48px; max-width:30ch; font-size:34px">Not every task needs frontier. Bounded diagnosis with defined tools — a 27B handles it today.</p>
+  <div class="foot"><span>suryal.dev</span><span class="mono">4 / 5</span></div>
+</div>
+
+<!-- SLIDE 5 · THE FLIP -->
+<div class="slide">
+  <div class="kick">Why it matters</div>
+  <h1 style="font-size:72px">Frontier → laptop lag is now ~<span class="hl">6 months</span>.</h1>
+  <div class="arrowlist">
+    <div class="item"><span class="a">→</span><span class="t"><b>Not every task needs frontier.</b> Right-size the model to the job.</span></div>
+    <div class="item"><span class="a">→</span><span class="t"><b>The harness is the real deal.</b> My first run scored Qwen at 0 — a parser bug, not the model. Whoever owns the evals owns the truth.</span></div>
+    <div class="item"><span class="a">→</span><span class="t"><b>The flip is coming.</b> Opus 4.8/5-class local = no token meter, no rate limits, no data egress. Plan for that world now.</span></div>
+  </div>
+  <p class="sub" style="margin-top:70px">Full methodology, charts &amp; reproducible harness:<br><b style="color:#5aa2f0">suryal.dev</b></p>
+  <div class="foot"><span>MLX Lab · Ep 03</span><span class="mono">5 / 5</span></div>
+</div>

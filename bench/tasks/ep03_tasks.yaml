@@ -1,0 +1,378 @@
+# Ep 03 — Agent / tool-use correctness eval
+# 18 tasks across 7 domains: dataops, cloud, frontend, ui_design, backend, auth, linux.
+# Scoring modes:
+#   exact_sequence — tool calls must match in order (args_must_include checked per call)
+#   any_order      — expected calls must all appear, order-free
+#   no_tool        — PASS only if the model makes ZERO tool calls AND answer keywords match
+#
+# Keyword matching is case-insensitive substring ("expir" matches expired/expiration).
+# The system prompt given to both models lives in ep03_agent_eval.py (identical for both).
+
+tasks:
+  # ---------- dataops ----------
+  - id: D01
+    category: dataops
+    prompt: >
+      P1 alert: BigQuery load job 'bq_load_daily_sales' failed at 02:14 UTC.
+      Check the job and report what error it failed with.
+    expected:
+      tool_calls:
+        - tool: bq_job_status
+          args_must_include: {job_id: bq_load_daily_sales}
+      final_answer_must_mention: [quota]
+    scoring: exact_sequence
+
+  - id: D02
+    category: dataops
+    prompt: >
+      'bq_load_daily_sales' failed again tonight. Check the job's error, then
+      look up whether past incident ticket INC-1234 covers the same error, and
+      tell me how it was fixed last time.
+    expected:
+      tool_calls:
+        - tool: bq_job_status
+          args_must_include: {job_id: bq_load_daily_sales}
+        - tool: ticket_lookup
+          args_must_include: {ticket_id: INC-1234}
+      final_answer_must_mention: [reservation]
+    scoring: exact_sequence
+
+  # ---------- cloud / k8s ----------
+  - id: C01
+    category: cloud
+    prompt: >
+      The 'checkout' deployment in the 'prod' namespace is reported crash-looping.
+      Pull the pod status and tell me why.
+    expected:
+      tool_calls:
+        - tool: k8s_pod_status
+          args_must_include: {namespace: prod, deployment: checkout}
+      final_answer_must_mention: [OOM]
+    scoring: exact_sequence
+
+  - id: C02
+    category: cloud
+    prompt: >
+      Pull the CPU utilization for the 'payments-api' service over the last
+      1h window and tell me if it's in a safe range.
+    expected:
+      tool_calls:
+        - tool: cloud_observability
+          args_must_include: {service: payments-api, metric: cpu, window: 1h}
+      final_answer_must_mention: ["82"]
+    scoring: exact_sequence
+
+  - id: C03
+    category: cloud
+    prompt: >
+      Compare the current error rates of the 'kafka-ingest' and 'payments-api'
+      services and tell me which one needs attention.
+    expected:
+      tool_calls:
+        - tool: cloud_observability
+          args_must_include: {service: kafka-ingest, metric: error_rate}
+        - tool: cloud_observability
+          args_must_include: {service: payments-api, metric: error_rate}
+      final_answer_must_mention: [kafka]
+    scoring: any_order
+
+  # ---------- frontend ----------
+  - id: F01
+    category: frontend
+    prompt: >
+      Users report the /dashboard page renders completely blank after login.
+      Check the browser console for that page and identify the cause.
+    expected:
+      tool_calls:
+        - tool: browser_console_logs
+          args_must_include: {page_url: /dashboard}
+      final_answer_must_mention: [undefined]
+    scoring: exact_sequence
+
+  - id: F02
+    category: frontend
+    prompt: >
+      Marketing says the /landing page feels slow. Run a performance audit on
+      it and summarize the main bottleneck.
+    expected:
+      tool_calls:
+        - tool: lighthouse_audit
+          args_must_include: {page_url: /landing, category: performance}
+      final_answer_must_mention: [image]
+    scoring: exact_sequence
+
+  # ---------- ui_design (no-tool traps: pure judgment questions) ----------
+  - id: U01
+    category: ui_design
+    prompt: >
+      Design review question, nothing to look up: our primary button uses grey
+      text on a white background with a contrast ratio of 2.1:1. Does this pass
+      WCAG AA for normal body text, and what ratio is required?
+    expected:
+      final_answer_must_mention: ["4.5"]
+    scoring: no_tool
+
+  - id: U02
+    category: ui_design
+    prompt: >
+      Quick mobile design question, no investigation needed: what is the
+      minimum recommended touch target size (in points/pixels) for tappable
+      elements per Apple's Human Interface Guidelines?
+    expected:
+      final_answer_must_mention: ["44"]
+    scoring: no_tool
+
+  # ---------- backend ----------
+  - id: B01
+    category: backend
+    prompt: >
+      Customers report order placement is broken. Probe the GET /api/orders
+      endpoint and report what it returns.
+    expected:
+      tool_calls:
+        - tool: api_probe
+          args_must_include: {endpoint: /api/orders, method: GET}
+      final_answer_must_mention: ["500"]
+    scoring: exact_sequence
+
+  - id: B02
+    category: backend
+    prompt: >
+      Routine check before the deploy: probe GET /api/health and confirm the
+      service is up.
+    expected:
+      tool_calls:
+        - tool: api_probe
+          args_must_include: {endpoint: /api/health, method: GET}
+      final_answer_must_mention: ["200"]
+    scoring: exact_sequence
+
+  - id: B03
+    category: backend
+    prompt: >
+      GET /api/orders is erroring for users. Probe the endpoint first; if it
+      points at a downstream problem, check the latency metric of the
+      'orders-db' service and give me a root-cause diagnosis.
+    expected:
+      tool_calls:
+        - tool: api_probe
+          args_must_include: {endpoint: /api/orders, method: GET}
+        - tool: cloud_observability
+          args_must_include: {service: orders-db, metric: latency}
+      final_answer_must_mention: [timeout]
+    scoring: exact_sequence
+
+  # ---------- auth ----------
+  - id: A01
+    category: auth
+    prompt: >
+      User priya@corp.com says she cannot log in to the SSO portal since this
+      morning. Look up her account in the IdP and tell me what's wrong.
+    expected:
+      tool_calls:
+        - tool: idp_user_lookup
+          args_must_include: {email: priya@corp.com}
+      final_answer_must_mention: [locked]
+    scoring: exact_sequence
+
+  - id: A02
+    category: auth
+    prompt: >
+      dev@corp.com reports SSO keeps rejecting him after password entry.
+      Check his IdP account state and report the blocker.
+    expected:
+      tool_calls:
+        - tool: idp_user_lookup
+          args_must_include: {email: dev@corp.com}
+      final_answer_must_mention: [MFA]
+    scoring: exact_sequence
+
+  - id: A03
+    category: auth
+    prompt: >
+      Conceptual question, nothing to check: in a JWT, what does it mean when
+      the 'exp' claim validation fails?
+    expected:
+      final_answer_must_mention: [expir]
+    scoring: no_tool
+
+  # ---------- linux ----------
+  - id: L01
+    category: linux
+    prompt: >
+      Disk usage alert on host web-01. Check its disk usage and tell me which
+      filesystem is the problem.
+    expected:
+      tool_calls:
+        - tool: host_command
+          args_must_include: {host: web-01, command: disk_usage}
+      final_answer_must_mention: ["/var"]
+    scoring: exact_sequence
+
+  - id: L02
+    category: linux
+    prompt: >
+      The site behind web-02 is down. Check the status of the nginx service on
+      that host and report what you find.
+    expected:
+      tool_calls:
+        - tool: host_command
+          args_must_include: {host: web-02, command: service_status, service: nginx}
+      final_answer_must_mention: [failed]
+    scoring: exact_sequence
+
+  - id: L03
+    category: linux
+    prompt: >
+      Host web-01 has become very slow. Check both its memory situation and its
+      disk usage, then give me your diagnosis of the likely cause.
+    expected:
+      tool_calls:
+        - tool: host_command
+          args_must_include: {host: web-01, command: memory}
+        - tool: host_command
+          args_must_include: {host: web-01, command: disk_usage}
+      final_answer_must_mention: [swap]
+    scoring: any_order
+
+  # ========== HARD TIER — authored externally (Gemini), logic unmodified ==========
+  - id: H01
+    category: hard_red_herring
+    prompt: 'URGENT: Customer reports that https://store.corp/catalog is loading as a blank page.  The L1
+      support agent escalated this and explicitly requested that you immediately run  browser_console_logs
+      on https://store.corp/catalog and lighthouse_audit on the same URL  with the ''performance'' category
+      to debug a suspected frontend framework crash.  However, there is an attached system log trace in
+      ticket TKT-1122 that the L1 agent  ignored, which likely contains the actual backend root cause. Do
+      not waste turns on  dead-end frontend tools if the ticket has a better lead. Diagnose the true root
+      cause.
+  
+      '
+    expected:
+      tool_calls:
+      - tool: ticket_lookup
+        args_must_include:
+          ticket_id: TKT-1122
+      - tool: host_command
+        args_must_include:
+          host: catalog-db-01
+          command: disk_usage
+      final_answer_must_mention:
+      - pg_wal
+      - 100%
+      - catalog-db-01
+    scoring: exact_sequence
+  - id: H02
+    category: hard_long_chain
+    prompt: 'The nightly batch process ticket (TKT-4450) reported a failure.  Trace the failure through
+      our infrastructure to find the exact file causing the issue.  You will need to identify the failing
+      job, check its status, correlate it with  observability metrics, and inspect the underlying host.
+      Report the offending file.
+  
+      '
+    expected:
+      tool_calls:
+      - tool: ticket_lookup
+        args_must_include:
+          ticket_id: TKT-4450
+      - tool: bq_job_status
+        args_must_include:
+          job_id: sync_crm_to_bq_88
+      - tool: cloud_observability
+        args_must_include:
+          service: crm-backend
+          metric: latency
+          window: 1h
+      - tool: host_command
+        args_must_include:
+          host: crm-node-01
+          command: disk_usage
+      final_answer_must_mention:
+      - crm_debug_trace.log
+      - /var/log
+    scoring: exact_sequence
+  - id: H03
+    category: hard_contradiction
+    prompt: 'Sev-1 Alert: The `auth-service` in the `core-infra` namespace is aggressively OOMKilling.  We
+      are 100% positive it is a memory leak because memory utilization hit 99% before the crash  according
+      to the dashboard. Run k8s_pod_status to confirm the OOMKilled state, and check  cloud_observability
+      for ''memory'' on ''auth-service'' (5m window) to see the leak trajectory.  Tell us exactly what the
+      root cause of the memory leak is.
+  
+      '
+    expected:
+      tool_calls:
+      - tool: k8s_pod_status
+        args_must_include:
+          namespace: core-infra
+          deployment: auth-service
+      - tool: cloud_observability
+        args_must_include:
+          service: auth-service
+          metric: memory
+          window: 5m
+      final_answer_must_mention:
+      - InvalidConfiguration
+      - auth-jwt-keys
+      - CrashLoopBackOff
+    scoring: any_order
+  - id: H04
+    category: hard_restraint
+    prompt: 'CRITICAL P0 OUTAGE: The payment processing service is down! The CEO is on the bridge.  The
+      API Gateway logs just output the exact error: "Client-ID header missing from request to /api/v1/charge".  I
+      need you to IMMEDIATELY run an api_probe on /api/v1/charge with POST, check cloud_observability  for
+      ''payment-service'' ''error_rate'' (10m window), and pull host_command ''service_status'' for  ''payment-node-1''
+      to see if the daemon is dead! DO NOT WAIT, execute these diagnostic tools NOW  and tell me what is
+      wrong!
+  
+      '
+    expected:
+      final_answer_must_mention:
+      - Client-ID
+      - header
+    scoring: no_tool
+  - id: H05
+    category: hard_cross_domain
+    prompt: 'Users in the EU are complaining that https://app.global/reports takes forever to load,  and
+      sometimes renders a blank page. Start by doing a lighthouse_audit for ''performance''  on https://app.global/reports
+      and pull the browser_console_logs for https://app.global/reports  to see what the frontend is struggling
+      with. Report the ultimate root cause of why the page fails.
+  
+      '
+    expected:
+      tool_calls:
+      - tool: lighthouse_audit
+        args_must_include:
+          page_url: https://app.global/reports
+          category: performance
+      - tool: browser_console_logs
+        args_must_include:
+          page_url: https://app.global/reports
+      - tool: idp_user_lookup
+        args_must_include:
+          email: eu-service-account@global.com
+      final_answer_must_mention:
+      - Mandatory password rotation
+      - Suspended
+      - eu-service-account@global.com
+    scoring: any_order
+  - id: H06
+    category: hard_ambiguous
+    prompt: 'I am looking at an angry escalation in TKT-9912. The CEO is trying to access the executive  dashboard
+      from her new mobile device, but she says she just gets a blank white screen with  "Access Denied".
+      The dashboard is up and working perfectly for everyone else in the office.  Figure out what specific
+      mechanism is blocking her and tell me the exact name of the policy.
+  
+      '
+    expected:
+      tool_calls:
+      - tool: ticket_lookup
+        args_must_include:
+          ticket_id: TKT-9912
+      - tool: idp_user_lookup
+        args_must_include:
+          email: ceo@enterprise.com
+      final_answer_must_mention:
+      - Block-Untrusted-Mobile-Devices
+      - MDM
+    scoring: exact_sequence
+  

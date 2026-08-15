@@ -17,3 +17,4 @@ models/
 
 # Keep results dir but allow JSON files to be committed
 results/*.gitkeep
+.env

@@ -1,0 +1,313 @@
+<title>The OG Test</title>
+<style>
+  :root {
+    --bg: #fcfcfb; --surface: #ffffff; --line: #e3e2dd;
+    --ink: #0b0b0b; --ink-2: #52514e; --ink-3: #8a8880;
+    --qwen: #2a78d6; --opus: #eb6834;
+    --pass: #008300; --fail: #e34948;
+    --track: #eeede8; --code-bg: #f1f0eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a1a19; --surface: #222221; --line: #3a3936;
+      --ink: #ffffff; --ink-2: #c3c2b7; --ink-3: #8a8880;
+      --qwen: #3987e5; --opus: #d95926;
+      --pass: #35a835; --fail: #e66767;
+      --track: #2e2e2c; --code-bg: #2a2a28;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1a19; --surface: #222221; --line: #3a3936;
+    --ink: #ffffff; --ink-2: #c3c2b7; --ink-3: #8a8880;
+    --qwen: #3987e5; --opus: #d95926;
+    --pass: #35a835; --fail: #e66767;
+    --track: #2e2e2c; --code-bg: #2a2a28;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    line-height: 1.5; padding: 3.5rem 1.25rem 5rem;
+  }
+  main { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 3rem; }
+  .mono, .num, .bar-label, .cmd, td, th { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  .eyebrow { font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  h1 { font-size: 2.15rem; line-height: 1.15; text-wrap: balance; font-weight: 700; margin-top: .5rem; }
+  .lede { color: var(--ink-2); margin-top: .8rem; max-width: 58ch; font-size: 1.02rem; }
+  .lede b { color: var(--ink); }
+
+  h2 { font-size: .78rem; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
+  .caption { color: var(--ink-2); font-size: .93rem; max-width: 62ch; margin-top: .4rem; }
+  .caption b { color: var(--ink); }
+
+  /* stat tiles */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; margin-top: 1.2rem; }
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .9rem 1rem; }
+  .tile small { display: block; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  .tile b { display: block; font-size: 1.6rem; font-weight: 600; margin-top: .1rem; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .tile span { font-size: .78rem; color: var(--ink-2); }
+
+  /* domain grid */
+  .domains { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .7rem; margin-top: 1rem; }
+  .dom { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .8rem .95rem; }
+  .dom b { font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; font-weight: 700; }
+  .dom p { font-size: .82rem; color: var(--ink-2); margin-top: .3rem; line-height: 1.45; }
+  .dom.hard { border-left: 3px solid var(--opus); grid-column: 1 / -1; }
+
+  /* chart frame */
+  .fig { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.3rem 1.4rem 1.1rem; margin-top: 1rem; }
+  .legend { display: flex; gap: 1.2rem; font-size: .78rem; color: var(--ink-2); margin-bottom: 1rem; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: .4rem; vertical-align: -1px; }
+  .i-qwen { background: var(--qwen); } .i-opus { background: var(--opus); }
+
+  .grp { margin-top: .9rem; }
+  .grp-t { font-size: .8rem; color: var(--ink-2); margin-bottom: .35rem; }
+  .row { display: grid; grid-template-columns: 3.2rem 1fr; align-items: center; gap: .7rem; margin-top: .3rem; }
+  .row .who { font-size: .72rem; color: var(--ink-3); text-align: right; }
+  .track { background: var(--track); border-radius: 5px; height: 22px; position: relative; }
+  .bar { height: 100%; border-radius: 5px 4px 4px 5px; min-width: 3px; position: relative; }
+  .bar.qwen { background: var(--qwen); } .bar.opus { background: var(--opus); }
+  .bar-label { position: absolute; right: -.5rem; transform: translateX(100%); top: 50%; translate: 0 -50%;
+               font-size: .78rem; color: var(--ink); white-space: nowrap; }
+  .bar-label.inside { right: .5rem; transform: none; color: #fff; }
+  .track:hover .bar { filter: brightness(1.08); }
+
+  .flag { display: inline-flex; align-items: center; gap: .35rem; font-size: .74rem; font-weight: 600; }
+  .flag.pass { color: var(--pass); } .flag.fail { color: var(--fail); }
+
+  /* H04 panel */
+  .h04 { display: grid; gap: .8rem; margin-top: 1rem; }
+  .quote { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--fail);
+           border-radius: 8px; padding: .9rem 1.1rem; font-size: .9rem; color: var(--ink-2); }
+  .quote b { color: var(--ink); }
+  .h04-flow { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+  .h04-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .85rem 1rem; font-size: .85rem; }
+  .h04-card .who { font-weight: 650; font-size: .8rem; }
+  .h04-card .who i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: .4rem; }
+  .h04-card p { color: var(--ink-2); margin-top: .3rem; }
+  @media (max-width: 560px) { .h04-flow { grid-template-columns: 1fr; } }
+
+  /* RAM strip */
+  .ram { margin-top: 1rem; }
+  .ram .track { height: 30px; border-radius: 6px; }
+  .ram .bar { background: var(--qwen); border-radius: 6px 4px 4px 6px; }
+  .marks { position: relative; height: 2.4rem; font-size: .7rem; color: var(--ink-3); }
+  .mark { position: absolute; top: 0; border-left: 1px dashed var(--ink-3); padding: .35rem 0 0 .35rem; white-space: nowrap; }
+
+  /* trajectory */
+  .traj-svg { width: 100%; height: auto; display: block; margin-top: 1rem; }
+  .traj-note { font-size: .85rem; color: var(--ink-2); margin-top: .6rem; max-width: 62ch; }
+
+  details { margin-top: 1rem; }
+  summary { cursor: pointer; font-size: .85rem; color: var(--ink-2); }
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); margin-top: .8rem; }
+  table { border-collapse: collapse; width: 100%; font-size: .82rem; }
+  th, td { text-align: left; padding: .5rem .8rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  th { font-size: .66rem; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
+
+  .fine { font-size: .84rem; color: var(--ink-2); }
+  .fine ul { padding-left: 1.1rem; margin-top: .5rem; display: grid; gap: .3rem; }
+  .cmd { display: block; background: var(--code-bg); border-radius: 6px; padding: .6rem .8rem; font-size: .74rem;
+         overflow-x: auto; white-space: pre; margin-top: .6rem; color: var(--ink); }
+  a { color: var(--qwen); }
+  @media (prefers-reduced-motion: no-preference) {
+    .bar { transition: filter .15s ease; }
+  }
+</style>
+
+<main>
+  <header>
+    <div class="eyebrow">MLX Lab · Episode 3 · Aug 2026</div>
+    <h1>Qwen3.8-27B dropped, and the AI community claims it beats the OG — Opus&nbsp;4.6</h1>
+    <p class="lede">Opus 4.6 is the model that kicked off serious AI adoption — the bar every open model
+    gets measured against. Last week a <b>27B open-weight model</b> claimed to clear it. So I ran both
+    through <b>24 agentic tasks lifted from real L1 on-call work</b> — failed pipeline jobs, crash-looping
+    pods, locked SSO accounts, full disks — the shift an ops team would actually productionize an agent
+    for, not build-me-a-webpage prompts. Opus over the API, Qwen3.8-27B running <b>on my desk</b>.
+    Total API bill: <b>$1.61</b>.</p>
+    <div class="tiles">
+      <div class="tile"><small>Easy tier</small><b>36 = 36</b><span>identical, 2 runs each</span></div>
+      <div class="tile"><small>Hard tier</small><b>10 = 10</b><span>of 12 · same task failed</span></div>
+      <div class="tile"><small>API spend</small><b>$1.61</b><span>measured, all runs</span></div>
+      <div class="tile"><small>Local RAM</small><b>18.2 GB</b><span>Qwen, 4-bit, M5 Max</span></div>
+    </div>
+  </header>
+
+  <section>
+    <h2>The tasks — one on-call shift, compressed</h2>
+    <p class="caption">Nine mock diagnostic tools mirror a production stack (job status, observability
+    metrics, k8s, RUM console logs, Lighthouse, API probes, IdP lookups, host commands, tickets).
+    Every task maps to a runbook step a human L1 does today.</p>
+    <div class="domains">
+      <div class="dom"><b>DataOps · 2</b><p>Failed BigQuery load → error → match against incident history → remediation</p></div>
+      <div class="dom"><b>Cloud / k8s · 3</b><p>CrashLoopBackOff root-cause · CPU threshold check · compare error rates across services</p></div>
+      <div class="dom"><b>Backend · 3</b><p>API returning 500s → probe → chase into DB latency → root-cause diagnosis</p></div>
+      <div class="dom"><b>Auth · 3</b><p>Locked SSO account · MFA-policy block · JWT expiry concept (answer, don't probe)</p></div>
+      <div class="dom"><b>Linux · 3</b><p>Full /var filesystem · dead nginx (port conflict) · swap-thrash diagnosis from memory + disk</p></div>
+      <div class="dom"><b>Frontend · 2</b><p>Blank page via console logs (JS TypeError) · slow page via Lighthouse (unoptimized hero image)</p></div>
+      <div class="dom"><b>UI judgment · 2</b><p>WCAG contrast &amp; touch-target questions — traps where calling any tool is the wrong move</p></div>
+      <div class="dom hard"><b>Hard tier · 6</b><p>Adversarial, third-party-authored: red herring · prompt-vs-data contradiction · restraint under pressure · 4-call chain · cross-domain pivot · ambiguous entry</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Scoreboard — the bars are the story</h2>
+    <p class="caption">Deterministic scoring, no LLM judge: right tool, right arguments, right answer.
+    <b>The bars are identical.</b> Both models even failed the <em>same</em> hard task, both runs.</p>
+    <div class="fig">
+      <div class="legend"><span><i class="i-qwen"></i>Qwen3.8-27B · local</span><span><i class="i-opus"></i>Opus 4.6 · API</span></div>
+      <div class="grp"><div class="grp-t">Easy tier — 18 tasks × 2 runs</div>
+        <div class="row"><span class="who">Qwen</span><div class="track" title="Qwen easy tier: 36 of 36 passed"><div class="bar qwen" style="width:100%"><span class="bar-label inside">36/36</span></div></div></div>
+        <div class="row"><span class="who">Opus</span><div class="track" title="Opus easy tier: 36 of 36 passed"><div class="bar opus" style="width:100%"><span class="bar-label inside">36/36</span></div></div></div>
+      </div>
+      <div class="grp"><div class="grp-t">Hard tier — 6 tasks × 2 runs, authored by a third model (Gemini)</div>
+        <div class="row"><span class="who">Qwen</span><div class="track" title="Qwen hard tier: 10 of 12 passed"><div class="bar qwen" style="width:83.3%"><span class="bar-label inside">10/12</span></div></div></div>
+        <div class="row"><span class="who">Opus</span><div class="track" title="Opus hard tier: 10 of 12 passed"><div class="bar opus" style="width:83.3%"><span class="bar-label inside">10/12</span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The shared failure</h2>
+    <p class="caption">Task H04 plants the answer in the prompt, then orders three tool calls anyway.</p>
+    <div class="h04">
+      <div class="quote">"CRITICAL P0 OUTAGE! The CEO is on the bridge. The gateway log says
+      <b>'Client-ID header missing'</b>. IMMEDIATELY run these three diagnostics NOW!"
+      <br><span style="font-size:.8rem; color:var(--ink-3)">— the answer is already in the log line. Correct move: zero tool calls.</span></div>
+      <div class="h04-flow">
+        <div class="h04-card"><span class="who"><i class="i-qwen"></i>Qwen3.8-27B</span>
+          <p>Ran all 3 ordered tools · both runs</p><span class="flag fail">✕ FAIL ×2</span></div>
+        <div class="h04-card"><span class="who"><i class="i-opus"></i>Opus 4.6</span>
+          <p>Ran all 3 ordered tools · both runs</p><span class="flag fail">✕ FAIL ×2</span></div>
+      </div>
+      <p class="caption">Two models trained oceans apart made the same choice: <b>obedience over restraint</b>.
+      If you want an agent that pushes back on wasteful orders, you have to prompt for it. Scale doesn't give it to you.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Discipline — where they actually differ</h2>
+    <p class="caption">Unnecessary tool calls beyond what each task needed. The pattern <b>flips between tiers</b>:
+    Qwen wanders on easy tasks (three invented endpoints, same three, every run) — but under pressure it ran a
+    4-call chain in exactly 4 calls, while Opus explored its way to 14.</p>
+    <div class="fig">
+      <div class="legend"><span><i class="i-qwen"></i>Qwen3.8-27B</span><span><i class="i-opus"></i>Opus 4.6</span></div>
+      <div class="grp"><div class="grp-t">Easy tier — extra calls (of 36 tasks)</div>
+        <div class="row"><span class="who">Qwen</span><div class="track" title="Qwen easy tier: 6 extra calls, all on task F01"><div class="bar qwen" style="width:16.2%"></div><span class="bar-label" style="left:16.2%">6 · all on one task</span></div></div>
+        <div class="row"><span class="who">Opus</span><div class="track" title="Opus easy tier: 0 extra calls"><div class="bar opus" style="width:0.8%"></div><span class="bar-label" style="left:1.5%">0</span></div></div>
+      </div>
+      <div class="grp"><div class="grp-t">Hard tier — extra calls (of 12 tasks)</div>
+        <div class="row"><span class="who">Qwen</span><div class="track" title="Qwen hard tier: 12 extra calls"><div class="bar qwen" style="width:32.4%"></div><span class="bar-label" style="left:32.4%">12</span></div></div>
+        <div class="row"><span class="who">Opus</span><div class="track" title="Opus hard tier: 37 extra calls"><div class="bar opus" style="width:100%"><span class="bar-label inside">37</span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The local tax — time per task</h2>
+    <p class="caption">Local is ~4× slower wall-clock: ~17 tok/s decode, ~400 tok/s prefill, 3.5s to first token.
+    Painful for a chat copilot; irrelevant for a background agent triaging alerts at 2am.</p>
+    <div class="fig">
+      <div class="legend"><span><i class="i-qwen"></i>Qwen3.8-27B · local</span><span><i class="i-opus"></i>Opus 4.6 · API</span></div>
+      <div class="grp"><div class="grp-t">Easy tier — avg seconds per task</div>
+        <div class="row"><span class="who">Qwen</span><div class="track" title="Qwen easy tier: 37 seconds average"><div class="bar qwen" style="width:48.7%"></div><span class="bar-label" style="left:48.7%">37s</span></div></div>
+        <div class="row"><span class="who">Opus</span><div class="track" title="Opus easy tier: 10.2 seconds average"><div class="bar opus" style="width:13.4%"></div><span class="bar-label" style="left:13.4%">10.2s</span></div></div>
+      </div>
+      <div class="grp"><div class="grp-t">Hard tier — avg seconds per task</div>
+        <div class="row"><span class="who">Qwen</span><div class="track" title="Qwen hard tier: 76 seconds average"><div class="bar qwen" style="width:100%"><span class="bar-label inside">76s</span></div></div></div>
+        <div class="row"><span class="who">Opus</span><div class="track" title="Opus hard tier: 21 seconds average"><div class="bar opus" style="width:27.6%"></div><span class="bar-label" style="left:27.6%">21s</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Memory footprint</h2>
+    <p class="caption">18.2 GB peak working set on a 128 GB M5 Max — <b>14% of the machine</b>, running agentic
+    multi-turn workloads. On paper that fits a 32 GB Mac (Metal's default budget there is ~24 GB); untested below 128.</p>
+    <div class="fig ram">
+      <div class="track" title="18.2 GB used of 128 GB unified memory"><div class="bar" style="width:14.2%"><span class="bar-label" style="left:100%; margin-left:.5rem; color:var(--ink)">18.2 GB</span></div></div>
+      <div class="marks">
+        <span class="mark" style="left:18.75%">24 GB — Metal budget on a 32 GB Mac</span>
+        <span class="mark" style="left:37.5%; top:1.1rem">48 GB — comfortable</span>
+        <span class="mark" style="left:97%; padding-right:.35rem; border-left:none; border-right:1px dashed var(--ink-3); text-align:right; translate:-100% 0;">128 GB — this machine</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The result, stated plainly</h2>
+    <p class="caption" style="max-width:66ch; font-size:1rem;">A <b>27B open-weight model, 4-bit quantized,
+    running on a laptop</b>, went head-to-head with Opus 4.6 on agentic work — and matched it task for
+    task, including failing the same trap. Opus 4.6 is not a soft target: released February 5, 2026, it
+    was the frontier — the model that made teams comfortable pushing model-written code to production,
+    the release that turned "agents" from demo to default. <b>Six months from frontier to running on a
+    laptop in 18 GB.</b> Matching it from 1/50th the parameters, offline, is a genuine feat. <b>On this evidence, the
+    community's excitement is not exaggeration.</b> The honest caveats: 24 tasks, one eval family, both
+    models at the ceiling — this shows the 27B clears the bar, not that they're equals everywhere. And the
+    OG is no longer the frontier; today's bar is the Fable 5 / Opus 5 generation. Which is exactly why the
+    trajectory below matters more than the tie itself.</p>
+  </section>
+
+  <section>
+    <h2>Why this matters — the flip is coming</h2>
+    <svg class="traj-svg" viewBox="0 0 760 260" role="img" aria-label="Trajectory of local model capability: toys in 2025, a 123B model running on one Mac by June 2026, a 27B matching Opus 4.6 on agentic on-call tasks in August 2026, and a dashed projection toward frontier-class local models that flip the adoption economics">
+      <line x1="40" y1="210" x2="740" y2="210" stroke="var(--line)" stroke-width="1"/>
+      <!-- measured: solid line ends at Ep 03 (today) -->
+      <path d="M 60 200 C 200 196, 280 165, 350 140 S 440 108, 480 100" fill="none" stroke="var(--qwen)" stroke-width="2.5"/>
+      <!-- projection: dashed only, from today to the open target -->
+      <path d="M 480 100 C 560 84, 620 62, 672 42" fill="none" stroke="var(--qwen)" stroke-width="2.5" stroke-dasharray="6 6" opacity="0.75"/>
+      <circle cx="150" cy="192" r="5" fill="var(--qwen)" stroke="var(--surface)" stroke-width="2"/>
+      <circle cx="330" cy="147" r="5" fill="var(--qwen)" stroke="var(--surface)" stroke-width="2"/>
+      <circle cx="480" cy="100" r="6" fill="var(--qwen)" stroke="var(--surface)" stroke-width="2"/>
+      <circle cx="678" cy="40" r="7" fill="none" stroke="var(--opus)" stroke-width="2.5"/>
+      <!-- axis dates -->
+      <text x="150" y="230" text-anchor="middle" fill="var(--ink-3)" font-size="11" font-family="ui-monospace, Menlo, monospace">2025</text>
+      <text x="330" y="230" text-anchor="middle" fill="var(--ink-3)" font-size="11" font-family="ui-monospace, Menlo, monospace">Jun 2026</text>
+      <text x="480" y="230" text-anchor="middle" fill="var(--ink-3)" font-size="11" font-family="ui-monospace, Menlo, monospace">Aug 2026</text>
+      <text x="678" y="230" text-anchor="middle" fill="var(--ink-3)" font-size="11" font-family="ui-monospace, Menlo, monospace">next?</text>
+      <!-- point labels: each below-left or above its dot, clear of the line -->
+      <text x="150" y="174" text-anchor="middle" fill="var(--ink-2)" font-size="12">local = toys</text>
+      <text x="330" y="126" text-anchor="middle" fill="var(--ink-2)" font-size="12">Ep 02: 123B runs on one Mac</text>
+      <text x="480" y="66" text-anchor="middle" fill="var(--ink)" font-size="12" font-weight="600">Ep 03: 27B matches the OG</text>
+      <text x="480" y="82" text-anchor="middle" fill="var(--ink-2)" font-size="11">frontier → laptop in 6 months</text>
+      <text x="678" y="16" text-anchor="middle" fill="var(--ink)" font-size="12" font-weight="600">Opus 4.8 / 5-class, local</text>
+      <text x="678" y="62" text-anchor="middle" fill="var(--opus)" font-size="11" font-weight="600">→ the adoption game flips</text>
+    </svg>
+    <p class="traj-note">Every serious AI adoption today routes through an API bill. The day an open model
+    delivers frontier-class agentic work on hardware you own, the economics invert: no per-token meter, no
+    data leaving the building, no rate limits. This episode says that day is closer than the discourse thinks —
+    a 27B already clears the bar that started the adoption wave. (And yes: buying the M5 Max before the memory
+    price surge is aging very well.)</p>
+  </section>
+
+  <section class="fine">
+    <h2>Fine print</h2>
+    <ul>
+      <li><b>Both at the ceiling</b> — this suite says "both clear the bar," not "they're equal." n=24, 2 runs, no statistical power for ranking.</li>
+      <li>Keyword scoring is auditable but shallow; transcripts hand-spot-checked, not exhaustively.</li>
+      <li>Sampling not pinned across engines; 4-bit quantization only; mock tools never fail — recovery and injection-resistance untested.</li>
+      <li>Harness built with Claude's assistance; hard tier independently authored by Gemini, logic unmodified. Full tasks, mock world, and raw transcripts in the repo — audit everything.</li>
+      <li>Gotcha worth stealing: Qwen3.8 emits XML-style tool calls, not Hermes-JSON. My first run scored it 0 on a task it aced — the parser was wrong, not the model. Check your harness before you believe any benchmark.</li>
+    </ul>
+    <span class="cmd">git clone https://github.com/Suryals/mlx-lab && cd mlx-lab && uv sync
+uv run python bench/ep03_agent_eval.py --engine mlx \
+  --model mlx-community/Qwen3.8-27B-4bit --label qwen --runs 2</span>
+    <details><summary>Data table (all figures)</summary>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Metric</th><th>Opus 4.6</th><th>Qwen3.8-27B</th></tr></thead>
+        <tbody>
+          <tr><td>Easy tier (18×2)</td><td>36/36</td><td>36/36</td></tr>
+          <tr><td>Hard tier (6×2)</td><td>10/12</td><td>10/12</td></tr>
+          <tr><td>Failed task</td><td>H04 ×2</td><td>H04 ×2</td></tr>
+          <tr><td>Extra calls easy / hard</td><td>0 / 37</td><td>6 / 12</td></tr>
+          <tr><td>Avg s/task easy / hard</td><td>10.2 / 21</td><td>37 / 76</td></tr>
+          <tr><td>Decode · prefill tok/s</td><td>—</td><td>17 · 400</td></tr>
+          <tr><td>TTFT · peak RAM</td><td>—</td><td>3.5s · 18.2 GB</td></tr>
+          <tr><td>Cost, all runs</td><td>$1.61</td><td>$0</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+  </section>
+</main>
