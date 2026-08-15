@@ -11,7 +11,7 @@ Build-in-public project. Each episode = a reproducible experiment + an X thread 
 |---|-------|--------|
 | [Ep 01](content/ep01-portfolio.md) | Raw speed/memory benchmark (3B + 7B) | ✅ Done |
 | [Ep 02](content/ep02-portfolio.md) | How far can one Mac go? Ladder to 123B + memory-ceiling probe | ✅ Done |
-| [Ep 03](content/ep03-portfolio.md) | Qwen3.8-27B vs Opus 4.6 — agent/tool-use eval, 24 on-call tasks | ✅ Done |
+| [Ep 03](content/ep03-portfolio.md) | Qwen3.8-27B vs Opus 4.6 — agent/tool-use eval, 24 on-call tasks · [article](https://suryal.dev/articles/qwen3-8-27b-vs-claude-opus-4-6.html) · [thread](https://x.com/suryaagentic/status/2088773723717538163) | ✅ Done |
 
 ## Episode 2 — the scaling ladder (M5 Max, 128GB)
 
