@@ -55,16 +55,21 @@ SYSTEM_PROMPT = (
 # ---------------------------------------------------------------------------
 
 class OpenRouterEngine:
-    URL = "https://openrouter.ai/api/v1/chat/completions"
+    """Any OpenAI-compatible chat-completions server: OpenRouter, LM Studio, llama.cpp, ..."""
 
-    def __init__(self, model: str):
+    def __init__(self, model: str, base_url: str | None = None):
         import httpx
         self.model = model
-        key = os.environ.get("OPENROUTER_API_KEY") or _read_dotenv("OPENROUTER_API_KEY")
-        if not key:
-            raise SystemExit("OPENROUTER_API_KEY not set (env or .env)")
+        base = (base_url or "https://openrouter.ai/api/v1").rstrip("/")
+        self.url = f"{base}/chat/completions"
+        if "openrouter.ai" in base:
+            key = os.environ.get("OPENROUTER_API_KEY") or _read_dotenv("OPENROUTER_API_KEY")
+            if not key:
+                raise SystemExit("OPENROUTER_API_KEY not set (env or .env)")
+        else:
+            key = "local"  # local servers ignore auth but the header must exist
         self.client = httpx.Client(
-            headers={"Authorization": f"Bearer {key}"}, timeout=120.0
+            headers={"Authorization": f"Bearer {key}"}, timeout=600.0
         )
         self.calls_made = 0
 
@@ -78,7 +83,7 @@ class OpenRouterEngine:
             self.calls_made += 1
             if self.calls_made > MAX_TOTAL_CALLS:
                 raise SystemExit("MAX_TOTAL_CALLS exceeded — aborting run (cost guard)")
-            r = self.client.post(self.URL, json={
+            r = self.client.post(self.url, json={
                 "model": self.model,
                 "messages": messages,
                 "tools": TOOL_SCHEMAS,
@@ -263,6 +268,7 @@ def main():
     ap.add_argument("--label", required=True, help="short name used in the results filename")
     ap.add_argument("--runs", type=int, default=1)
     ap.add_argument("--only", help="comma-separated task IDs, e.g. T01 smoke tests")
+    ap.add_argument("--base-url", help="OpenAI-compatible server base URL (e.g. http://localhost:1234/v1 for LM Studio); openrouter engine only")
     args = ap.parse_args()
 
     tasks = yaml.safe_load(TASKS_FILE.read_text())["tasks"]
@@ -270,7 +276,7 @@ def main():
         wanted = set(args.only.split(","))
         tasks = [t for t in tasks if t["id"] in wanted]
 
-    engine = MLXEngine(args.model) if args.engine == "mlx" else OpenRouterEngine(args.model)
+    engine = MLXEngine(args.model) if args.engine == "mlx" else OpenRouterEngine(args.model, base_url=args.base_url)
 
     all_runs = []
     for run_idx in range(args.runs):
