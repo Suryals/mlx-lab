@@ -50,3 +50,9 @@ def test_fact_score_counts_matches():
     f = score_facts(stale, truth)
     assert f["escalate_to"] is False and f["facts_correct"] == 2
     assert score_facts(None, truth)["facts_correct"] == 0
+
+
+def test_parse_handles_braces_inside_string_values():
+    obj = dict(GOOD, probable_cause="pool exhausted (see {pool_id})")
+    got, clean = parse_output("Result:\n```json\n" + json.dumps(obj) + "\n```")
+    assert got == obj and clean is False

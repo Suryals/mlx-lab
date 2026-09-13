@@ -26,23 +26,16 @@ def strip_think(text: str) -> str:
 
 
 def _first_json_object(text: str) -> dict | None:
-    # scan for the first balanced {...} that parses as a dict
+    # scan for the first {...} that parses as a dict, handling string escapes correctly
+    decoder = json.JSONDecoder()
     start = text.find("{")
     while start != -1:
-        depth = 0
-        for i in range(start, len(text)):
-            if text[i] == "{":
-                depth += 1
-            elif text[i] == "}":
-                depth -= 1
-                if depth == 0:
-                    try:
-                        obj = json.loads(text[start:i + 1])
-                        if isinstance(obj, dict):
-                            return obj
-                    except json.JSONDecodeError:
-                        pass
-                    break
+        try:
+            obj, _ = decoder.raw_decode(text, idx=start)
+            if isinstance(obj, dict):
+                return obj
+        except json.JSONDecodeError:
+            pass
         start = text.find("{", start + 1)
     return None
 
