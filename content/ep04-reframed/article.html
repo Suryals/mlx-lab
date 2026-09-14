@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAG or fine-tuning? One agent, four configurations, one catalog change. — Surya</title>
+<meta name="description" content="MLX Lab Episode 04: a local Qwen3.5-4B experiment explores RAG, fine-tuning, and the evaluation gate for combining them.">
+<meta name="theme-color" content="#FBFAF7">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site-style.css"><link rel="stylesheet" href="site-articles.css"><link rel="stylesheet" href="article.css">
+</head><body>
+<a class="skip-link" href="#article-body">Skip to article</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+    <header class="topbar" id="topbar">
+        <div class="bar">
+            <a href="https://suryal.dev/" class="mark">Surya</a>
+            <nav class="nav" aria-label="Primary">
+                <a href="https://suryal.dev/#work">Work</a>
+                <a href="https://suryal.dev/#writing">Writing</a>
+                <a href="https://suryal.dev/#opensource">Open source</a>
+                <a href="https://suryal.dev/#experience">Experience</a>
+                <a href="https://suryal.dev/#contact">Contact</a>
+            </nav>
+            <a href="https://suryal.dev/articles/" class="topbar-cta">All articles</a>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+                <span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+        <a href="https://suryal.dev/#work">Work</a>
+        <a href="https://suryal.dev/#writing">Writing</a>
+        <a href="https://suryal.dev/#opensource">Open source</a>
+        <a href="https://suryal.dev/#experience">Experience</a>
+        <a href="https://suryal.dev/#contact">Contact</a>
+        <a href="https://suryal.dev/articles/">All articles</a>
+    </div>
+
+
+<main class="article"><div class="wrap">
+<header class="article-header">
+<p class="breadcrumb"><a href="https://suryal.dev/articles/">Articles</a><span>/</span>Local AI</p>
+<span class="article-cat" style="margin-top:14px">Local AI · RAG &amp; Fine-tuning</span>
+<h1 class="article-title">RAG or fine-tuning?</h1>
+<p class="article-sub">One agent, four configurations, one catalog change.</p>
+<div class="article-meta"><span class="who">Suryaprakash Lakshmanan</span><span class="sep">·</span><span>September 2026</span><span class="sep">·</span><span>MLX Lab · Episode 4</span></div>
+<div class="article-tags"><span>Qwen3.5-4B</span><span>RAG</span><span>Fine-tuning</span><span>Agent Eval</span><span>MLX</span></div>
+</header>
+<article class="article-body" id="article-body">
+<p>The RAG vs fine-tuning debate often ends with a team picking a side. One approach becomes the architecture, and every failure becomes a reason to invest more in it.</p>
+<p>For a production system, I want to ask a different question: what is failing, and what evidence would justify the next change?</p>
+<p>So which approach would I choose for an incident-triage agent? I ran Qwen3.5-4B four ways to find out.</p>
+<h2>The rule everyone quotes</h2>
+<p>Paolo Perrone puts the distinction this way in <a href="https://theaiengineer.substack.com/p/rag-vs-fine-tuning">RAG vs Fine-Tuning</a>:</p>
+<blockquote>RAG changes what the model sees at answer time; fine-tuning changes how it behaves.</blockquote>
+<p>Clean rule. Does it survive a real task?</p>
+<h2>One triage agent, built four ways</h2>
+<p>I built the experiment around NimbusCart, a fictional organization with six services. An alert goes in; a JSON record comes out with severity, affected service, probable cause, runbook reference, escalation destination, and an escalation flag.</p>
+<p>Think of that record feeding downstream automation: the agent decides where the incident should go, and nobody reads each answer before the next step acts on it. That is the production scenario this task represents. The experiment itself ran offline on synthetic alerts; no real incidents were routed.</p>
+<p>This is a task you could plausibly demo with either approach. Retrieval can supply the service catalog and runbooks. Fine-tuning can learn from examples of completed triage records. I tested both, separately and together: base, base + RAG, fine-tuned, and fine-tuned + RAG.</p>
+<p>I ran Qwen3.5-4B locally on an M5 Max. The adapter used 360 synthetic training examples and 40 validation examples. Retrieval selected three chunks from eight documents using TF-IDF. I evaluated 24 alerts with deterministic scoring and no LLM judge.</p>
+<h2>The first snapshot: fine-tuning sweeps the measured columns</h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Configuration</th><th scope="col">JSON compliance</th><th scope="col">Severity correct</th><th scope="col">Fact fields correct</th></tr></thead><tbody><tr><td>Base</td><td>24/24 · 100%</td><td>17/24 · 71%</td><td>24/72 · 33%</td></tr><tr><td>Base + RAG</td><td>24/24 · 100%</td><td>18/24 · 75%</td><td>66/72 · 92%</td></tr><tr><td>Fine-tuned</td><td>24/24 · 100%</td><td>24/24 · 100%</td><td>72/72 · 100%</td></tr><tr><td>Fine-tuned + RAG</td><td>24/24 · 100%</td><td>21/24 · 88%</td><td>70/72 · 97%</td></tr></tbody></table></div>
+<p>Fact accuracy counts three exact-match fields per alert: service, runbook reference, and escalation destination. It is not whole-answer accuracy. Severity is scored separately; these columns do not establish that every decision field is correct.</p>
+<p>This is the cell that could get promoted to production: fine-tuning alone, with 100% across the measured columns. But the training examples already contained the organization’s facts, and the evaluation reused the training templates with different values and a new region. Perfect performance here is compatible with memorizing familiar patterns. The table rewards getting the original world right. The next test changes that world.</p>
+<p>Base + RAG made a substantial improvement without training: fact accuracy rose from 33% to 92%. All four configurations already passed the JSON compliance check. There was no demonstrated need to fine-tune for JSON formatting in this run.</p>
+<h2>Then I changed the catalog</h2>
+<p>Checkout moved from team-atlas to team-borealis. Its destination changed from #atlas-oncall to #borealis-oncall. I reran four checkout alerts against the updated documents. No retraining.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Configuration</th><th scope="col">New destination correct</th><th scope="col">Severity correct</th></tr></thead><tbody><tr><td>Base + RAG</td><td>4/4</td><td>3/4</td></tr><tr><td>Fine-tuned</td><td>0/4</td><td>4/4</td></tr><tr><td>Fine-tuned + RAG</td><td>4/4</td><td>3/4</td></tr></tbody></table></div>
+<p>The fine-tuned model kept returning #atlas-oncall. Both retrieval configurations returned the new destination on all four alerts.</p>
+<p>The JSON still passed the compliance check. The destination was wrong. In an autonomous workflow, a record like this could pass a format validator and send an incident to the former team’s channel without a person reviewing it first. A healthy-looking response can still be an outdated decision.</p>
+<p>The combined configuration still missed one severity label. It did not outperform base + RAG on these two reorg measures. That matters: the lesson cannot simply be to choose the fourth configuration instead.</p>
+<h2>So why not just retrain?</h2>
+<p>I could update the training data and train again. In this dataset, 62 of the 360 training examples contain the old checkout destination. A corrected adapter would then need evaluation and deployment. With retrieval, the correction starts in the catalog, followed by whatever refresh the retrieval system requires.</p>
+<p>In a production organization, the service owner can update that source as part of the ownership change. Updating an adapter also brings in the team that owns the training pipeline. The question becomes whether a routine catalog change should require a new model release.</p>
+<p>A format check would not have caught this mistake. An evaluation with the new destination would. That is why the source of truth and the evaluation must move with the organization, whichever model serves the request.</p>
+<h2>What I would build first</h2>
+<p>After this experiment, my starting point for this kind of agent is base + RAG with an explicit task prompt. It improved fact accuracy from 33% to 92% without training, and followed the checkout update. I would keep owners, destinations, runbooks, and changing policies in maintained sources, then check that retrieval finds the right evidence and the model uses it.</p>
+<p>Before adding an adapter, I would build the evaluation that can tell me whether it helps.</p>
+<p>By a golden set, I mean a versioned, human-reviewed collection of representative inputs, expected answers or scoring rubrics, and the source facts or policy version used to judge them. It must be separate from the examples used to train the model.</p>
+<p>For this triage task, I would include ordinary incidents, ambiguous alerts, missing documents, changed owners, conflicting old and new information, and cases where the correct action is to abstain or ask for review. Labels should reflect realistic alert values and an agreed escalation policy.</p>
+<p>The 24 synthetic evaluation alerts in this episode are a useful experimental check. They are not that production golden set.</p>
+<p>Without a trusted set, I cannot reliably tell whether a fine-tune fixes a recurring problem, memorizes examples, or introduces regressions. I would keep the base + RAG approach, review its errors, and use those reviews to build the set. RAG needs evaluation too; it simply gives me a baseline to improve while the evidence develops.</p>
+<p><strong>No golden set? Stick with RAG while you build one.</strong> That is a gate for adding fine-tuning; RAG still needs evaluation before production use.</p>
+<p>Once the set is ready, diagnose the remaining errors. Missing or stale evidence points toward the sources and retrieval pipeline. Repeated mistakes with adequate evidence call for clearer instructions, examples, or output validation. For a deterministic escalation rule, ordinary code may be the simplest implementation.</p>
+<p>If a behavior gap survives those fixes, trial fine-tuning on separate, reviewed examples. Include retrieved context and cases where current documents supersede older facts. Compare base + RAG against fine-tuned + RAG on held-out cases, including catalog changes. Require a meaningful behavior gain, acceptable regressions, and serving cost and latency that fit the application. Otherwise, keep base + RAG.</p>
+<p>Production may need both: retrieval for current evidence, fine-tuning for behavior that demonstrably improves with training. The evaluation decides when to make that move.</p>
+<figure><a href="theme-diagram.png"><svg class="ep04-diagram" xmlns="http://www.w3.org/2000/svg" width="1600" height="1540" viewBox="0 0 1600 1540" role="img" aria-labelledby="title desc"><title id="title">RAG first. Fine-tune when the evidence says so.</title><desc id="desc">Start with base plus RAG, build a golden set, and add fine-tuning only if a measured behavior gap and held-out improvement justify it. Otherwise continue improving RAG. A four-alert catalog-change test illustrates why changing facts need current evidence.</desc>
+<rect x="0" y="0" width="1600" height="1540" rx="0" fill="#F5F3EE"/>
+<rect x="64" y="60" width="42" height="6" rx="0" fill="#076C66"/>
+<text x="122" y="48" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="700" fill="#076C66">MLX LAB  /  EPISODE 04</text>
+<text x="790" y="48" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="400" fill="#52616A">Qwen3.5-4B · M5 Max · 24-alert grid</text>
+<text x="64" y="110" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="700" fill="#172B39">RAG first.</text>
+<text x="64" y="204" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="50" font-weight="700" fill="#172B39">Fine-tune when the evidence says so.</text>
+<text x="66" y="284" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="400" fill="#52616A">Production may need both. Let evaluation decide when.</text>
+<rect x="64" y="364" width="1472" height="124" rx="18" fill="#172B39"/>
+<text x="96" y="387" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="700" fill="#FFFFFF">01  START WITH BASE + RAG</text>
+<text x="96" y="434" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="400" fill="#CFDFE4">Current sources + clear instructions. Establish the baseline.</text>
+<polyline points="800,488 800,526" fill="none" stroke="#076C66" stroke-width="3"/>
+<polygon points="800,526 792,513 808,513" fill="#076C66"/>
+<rect x="64" y="530" width="1472" height="116" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="96" y="552" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="700" fill="#172B39">02  BUILD A GOLDEN EVALUATION SET</text>
+<text x="96" y="598" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Representative, reviewed cases with trusted outcomes. Keep them separate from training.</text>
+<polyline points="420,646 420,699" fill="none" stroke="#076C66" stroke-width="3"/>
+<polygon points="420,699 412,686 428,686" fill="#076C66"/>
+<polyline points="1160,646 1160,699" fill="none" stroke="#076C66" stroke-width="3"/>
+<polygon points="1160,699 1152,686 1168,686" fill="#076C66"/>
+<text x="440" y="660" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#52616A">NOT YET</text>
+<text x="1180" y="660" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#076C66">READY</text>
+<rect x="64" y="704" width="712" height="290" rx="18" fill="#E9EDEA" stroke="#D4DAD7" stroke-width="2"/>
+<text x="96" y="735" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="700" fill="#172B39">Stay with base + RAG</text>
+<text x="96" y="796" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Review errors. Improve sources and retrieval.</text>
+<text x="96" y="840" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Collect and label representative cases.</text>
+<text x="96" y="904" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#076C66">No golden set? Stick with RAG.</text>
+<rect x="808" y="704" width="728" height="290" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="840" y="735" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="700" fill="#172B39">Diagnose the remaining gap</text>
+<text x="840" y="796" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Missing evidence? Fix retrieval.</text>
+<text x="840" y="840" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Behavior errors? Test prompts and rules first.</text>
+<text x="840" y="904" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#076C66">Persistent gap? Trial fine-tuning + RAG.</text>
+<polyline points="1172,994 1172,1040" fill="none" stroke="#076C66" stroke-width="3"/>
+<polygon points="1172,1040 1164,1027 1180,1027" fill="#076C66"/>
+<rect x="64" y="1044" width="1472" height="116" rx="18" fill="#DCECE6"/>
+<text x="96" y="1067" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="700" fill="#076C66">03  ADD FINE-TUNING ONLY IF IT EARNS ITS PLACE</text>
+<text x="96" y="1111" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#172B39">Require held-out gains, acceptable regressions, cost and latency. Otherwise keep base + RAG.</text>
+<text x="64" y="1200" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#52616A">AFTER ONE CATALOG EDIT, NO RETRAINING  /  NEW DESTINATION CORRECT</text>
+<rect x="64" y="1244" width="472" height="144" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="88" y="1266" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#172B39">Fine-tuned</text>
+<text x="88" y="1310" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="49" font-weight="700" fill="#88571B">0/4</text>
+<rect x="564" y="1244" width="472" height="144" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="588" y="1266" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#172B39">Base + RAG</text>
+<text x="588" y="1310" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="49" font-weight="700" fill="#076C66">4/4</text>
+<rect x="1064" y="1244" width="472" height="144" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="1088" y="1266" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#172B39">Fine-tuned + RAG</text>
+<text x="1088" y="1310" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="49" font-weight="700" fill="#076C66">4/4</text>
+<text x="64" y="1414" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#172B39">4 synthetic alerts. The combined setup still missed 1 severity label.</text>
+<text x="64" y="1458" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="400" fill="#52616A">One model · small synthetic test · proposed decision path, not proof that both always win</text>
+</svg></a><figcaption>A proposed production path, informed by the experiment. <a href="theme-diagram.png">Download PNG</a> · <a href="theme-diagram.svg">Vector SVG</a></figcaption></figure>
+<h2>What this run cannot settle</h2>
+<p>The evaluation reused 24 training templates. Some generated values were unrealistic, including a 5xx rate above 9,000%, which complicates interpretation of severity mistakes. The adapter may have learned to follow alert tags while the base model reacted to the contradictory numbers. A cleaner experiment is needed to estimate that effect.</p>
+<p>Several runbook errors matched document filenames from the retrieved context instead of canonical runbook IDs. That suggests a context-format issue worth testing; it does not explain all severity errors. The combined setup scored below fine-tuning alone on the original snapshot, so combining the techniques is not an automatic improvement.</p>
+<p>The run used one model, one seed, eight documents, and four reorg cases. It did not establish retrieval freshness guarantees, production reliability, or the best architecture for other tasks. Tuned configurations decoded at about 91–92 tokens/s versus 167–168 for base configurations with the adapter unfused; fusion with mlx_lm.fuse was not measured.</p>
+<p>This experiment did not compare an improved policy prompt or a rules-based severity classifier against the adapter. The severity gap therefore cannot establish that training was necessary.</p>
+<p>My next experiment would use realistic values, unseen alert families, a stronger prompt baseline, and explicit context-conflict cases. Those comparisons would help decide whether to add an adapter to this RAG system.</p>
+<p><strong>Start with base + RAG. Build the golden set. Add fine-tuning when it earns its place. Keep evaluating both.</strong></p>
+<h2>Sources and experiment artifacts</h2>
+<p>The framing was prompted by <a href="https://theaiengineer.substack.com/p/rag-vs-fine-tuning">Paolo Perrone’s RAG vs Fine-Tuning</a>. The sequencing and golden-set gate are my proposed engineering approach, not a result measured by this experiment.</p>
+<p>The measured results come from the local <a href="../../results/ep04-grid.json">24-alert grid</a>, <a href="../../results/ep04-reorg.json">four-alert reorg run</a>, and <a href="../../bench/ep04_score.py">scoring implementation</a>. The <a href="../../bench/ep04_eval.py">evaluation runner</a> records the comparison setup. Public project: <a href="https://github.com/Suryals/mlx-lab">MLX Lab</a>.</p>
+</article>
+</div></main>
+    <footer class="footer">
+        <div class="wrap footer-inner">
+            <div class="footer-col">
+                <span class="footer-mark">Surya</span>
+                <p>Staff Engineer, AI Enablement &amp; Cloud · Chennai, India</p>
+            </div>
+            <div class="footer-col footer-colophon">
+                <span>© <span id="year">2026</span> Suryaprakash Lakshmanan</span>
+                <span><a href="https://suryal.dev/">Home</a> · <a href="https://suryal.dev/articles/">Articles</a> · <a href="https://suryal.dev/feed.xml">RSS</a></span>
+            </div>
+        </div>
+    </footer>
+
+
+<script>
+const menuBtn=document.getElementById('menuBtn'), menu=document.getElementById('mobileMenu');
+function closeMenu(){menuBtn.classList.remove('open');menu.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');menu.setAttribute('aria-hidden','true')}
+menuBtn.addEventListener('click',()=>{const open=menuBtn.getAttribute('aria-expanded')!=='true';menuBtn.classList.toggle('open',open);menu.classList.toggle('open',open);menuBtn.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-hidden',String(!open))});
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menuBtn.getAttribute('aria-expanded')==='true'){closeMenu();menuBtn.focus()}});
+matchMedia('(min-width:861px)').addEventListener('change',e=>{if(e.matches)closeMenu()});
+function updateProgress(){const distance=document.documentElement.scrollHeight-innerHeight;document.getElementById('progress').style.width=(distance>0?100*scrollY/distance:0)+'%';document.getElementById('topbar').classList.toggle('scrolled',scrollY>8)}
+addEventListener('scroll',updateProgress,{passive:true});addEventListener('resize',updateProgress);updateProgress();
+</script>
+</body></html>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1540" viewBox="0 0 1600 1540" role="img" aria-labelledby="title desc"><title id="title">RAG first. Fine-tune when the evidence says so.</title><desc id="desc">Start with base plus RAG, build a golden set, and add fine-tuning only if a measured behavior gap and held-out improvement justify it. Otherwise continue improving RAG. A four-alert catalog-change test illustrates why changing facts need current evidence.</desc>
+<rect x="0" y="0" width="1600" height="1540" rx="0" fill="#F5F3EE"/>
+<rect x="64" y="60" width="42" height="6" rx="0" fill="#076C66"/>
+<text x="122" y="48" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="700" fill="#076C66">MLX LAB  /  EPISODE 04</text>
+<text x="790" y="48" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="400" fill="#52616A">Qwen3.5-4B · M5 Max · 24-alert grid</text>
+<text x="64" y="110" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="700" fill="#172B39">RAG first.</text>
+<text x="64" y="204" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="50" font-weight="700" fill="#172B39">Fine-tune when the evidence says so.</text>
+<text x="66" y="284" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="400" fill="#52616A">Production may need both. Let evaluation decide when.</text>
+<rect x="64" y="364" width="1472" height="124" rx="18" fill="#172B39"/>
+<text x="96" y="387" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="700" fill="#FFFFFF">01  START WITH BASE + RAG</text>
+<text x="96" y="434" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="400" fill="#CFDFE4">Current sources + clear instructions. Establish the baseline.</text>
+<polyline points="800,488 800,526" fill="none" stroke="#076C66" stroke-width="3"/>
+<polygon points="800,526 792,513 808,513" fill="#076C66"/>
+<rect x="64" y="530" width="1472" height="116" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="96" y="552" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="700" fill="#172B39">02  BUILD A GOLDEN EVALUATION SET</text>
+<text x="96" y="598" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Representative, reviewed cases with trusted outcomes. Keep them separate from training.</text>
+<polyline points="420,646 420,699" fill="none" stroke="#076C66" stroke-width="3"/>
+<polygon points="420,699 412,686 428,686" fill="#076C66"/>
+<polyline points="1160,646 1160,699" fill="none" stroke="#076C66" stroke-width="3"/>
+<polygon points="1160,699 1152,686 1168,686" fill="#076C66"/>
+<text x="440" y="660" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#52616A">NOT YET</text>
+<text x="1180" y="660" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#076C66">READY</text>
+<rect x="64" y="704" width="712" height="290" rx="18" fill="#E9EDEA" stroke="#D4DAD7" stroke-width="2"/>
+<text x="96" y="735" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="700" fill="#172B39">Stay with base + RAG</text>
+<text x="96" y="796" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Review errors. Improve sources and retrieval.</text>
+<text x="96" y="840" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Collect and label representative cases.</text>
+<text x="96" y="904" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#076C66">No golden set? Stick with RAG.</text>
+<rect x="808" y="704" width="728" height="290" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="840" y="735" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="700" fill="#172B39">Diagnose the remaining gap</text>
+<text x="840" y="796" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Missing evidence? Fix retrieval.</text>
+<text x="840" y="840" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#52616A">Behavior errors? Test prompts and rules first.</text>
+<text x="840" y="904" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#076C66">Persistent gap? Trial fine-tuning + RAG.</text>
+<polyline points="1172,994 1172,1040" fill="none" stroke="#076C66" stroke-width="3"/>
+<polygon points="1172,1040 1164,1027 1180,1027" fill="#076C66"/>
+<rect x="64" y="1044" width="1472" height="116" rx="18" fill="#DCECE6"/>
+<text x="96" y="1067" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="700" fill="#076C66">03  ADD FINE-TUNING ONLY IF IT EARNS ITS PLACE</text>
+<text x="96" y="1111" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="400" fill="#172B39">Require held-out gains, acceptable regressions, cost and latency. Otherwise keep base + RAG.</text>
+<text x="64" y="1200" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#52616A">AFTER ONE CATALOG EDIT, NO RETRAINING  /  NEW DESTINATION CORRECT</text>
+<rect x="64" y="1244" width="472" height="144" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="88" y="1266" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#172B39">Fine-tuned</text>
+<text x="88" y="1310" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="49" font-weight="700" fill="#88571B">0/4</text>
+<rect x="564" y="1244" width="472" height="144" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="588" y="1266" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#172B39">Base + RAG</text>
+<text x="588" y="1310" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="49" font-weight="700" fill="#076C66">4/4</text>
+<rect x="1064" y="1244" width="472" height="144" rx="18" fill="#FFFFFF" stroke="#D4DAD7" stroke-width="2"/>
+<text x="1088" y="1266" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#172B39">Fine-tuned + RAG</text>
+<text x="1088" y="1310" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="49" font-weight="700" fill="#076C66">4/4</text>
+<text x="64" y="1414" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" fill="#172B39">4 synthetic alerts. The combined setup still missed 1 severity label.</text>
+<text x="64" y="1458" dominant-baseline="text-before-edge" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="400" fill="#52616A">One model · small synthetic test · proposed decision path, not proof that both always win</text>
+</svg>

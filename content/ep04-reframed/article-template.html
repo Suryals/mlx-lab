@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAG or fine-tuning? One agent, four configurations, one catalog change. — Surya</title>
+<meta name="description" content="MLX Lab Episode 04: a local Qwen3.5-4B experiment explores RAG, fine-tuning, and the evaluation gate for combining them.">
+<meta name="theme-color" content="#FBFAF7">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site-style.css"><link rel="stylesheet" href="site-articles.css"><link rel="stylesheet" href="article.css">
+</head><body>
+<a class="skip-link" href="#article-body">Skip to article</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+    <header class="topbar" id="topbar">
+        <div class="bar">
+            <a href="https://suryal.dev/" class="mark">Surya</a>
+            <nav class="nav" aria-label="Primary">
+                <a href="https://suryal.dev/#work">Work</a>
+                <a href="https://suryal.dev/#writing">Writing</a>
+                <a href="https://suryal.dev/#opensource">Open source</a>
+                <a href="https://suryal.dev/#experience">Experience</a>
+                <a href="https://suryal.dev/#contact">Contact</a>
+            </nav>
+            <a href="https://suryal.dev/articles/" class="topbar-cta">All articles</a>
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+                <span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+        <a href="https://suryal.dev/#work">Work</a>
+        <a href="https://suryal.dev/#writing">Writing</a>
+        <a href="https://suryal.dev/#opensource">Open source</a>
+        <a href="https://suryal.dev/#experience">Experience</a>
+        <a href="https://suryal.dev/#contact">Contact</a>
+        <a href="https://suryal.dev/articles/">All articles</a>
+    </div>
+
+
+<main class="article"><div class="wrap">
+<header class="article-header">
+<p class="breadcrumb"><a href="https://suryal.dev/articles/">Articles</a><span>/</span>Local AI</p>
+<span class="article-cat" style="margin-top:14px">Local AI · RAG &amp; Fine-tuning</span>
+<h1 class="article-title">RAG or fine-tuning?</h1>
+<p class="article-sub">One agent, four configurations, one catalog change.</p>
+<div class="article-meta"><span class="who">Suryaprakash Lakshmanan</span><span class="sep">·</span><span>September 2026</span><span class="sep">·</span><span>MLX Lab · Episode 4</span></div>
+<div class="article-tags"><span>Qwen3.5-4B</span><span>RAG</span><span>Fine-tuning</span><span>Agent Eval</span><span>MLX</span></div>
+</header>
+<article class="article-body" id="article-body">
+{{BODY}}
+</article>
+</div></main>
+    <footer class="footer">
+        <div class="wrap footer-inner">
+            <div class="footer-col">
+                <span class="footer-mark">Surya</span>
+                <p>Staff Engineer, AI Enablement &amp; Cloud · Chennai, India</p>
+            </div>
+            <div class="footer-col footer-colophon">
+                <span>© <span id="year">2026</span> Suryaprakash Lakshmanan</span>
+                <span><a href="https://suryal.dev/">Home</a> · <a href="https://suryal.dev/articles/">Articles</a> · <a href="https://suryal.dev/feed.xml">RSS</a></span>
+            </div>
+        </div>
+    </footer>
+
+
+<script>
+const menuBtn=document.getElementById('menuBtn'), menu=document.getElementById('mobileMenu');
+function closeMenu(){menuBtn.classList.remove('open');menu.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');menu.setAttribute('aria-hidden','true')}
+menuBtn.addEventListener('click',()=>{const open=menuBtn.getAttribute('aria-expanded')!=='true';menuBtn.classList.toggle('open',open);menu.classList.toggle('open',open);menuBtn.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-hidden',String(!open))});
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menuBtn.getAttribute('aria-expanded')==='true'){closeMenu();menuBtn.focus()}});
+matchMedia('(min-width:861px)').addEventListener('change',e=>{if(e.matches)closeMenu()});
+function updateProgress(){const distance=document.documentElement.scrollHeight-innerHeight;document.getElementById('progress').style.width=(distance>0?100*scrollY/distance:0)+'%';document.getElementById('topbar').classList.toggle('scrolled',scrollY>8)}
+addEventListener('scroll',updateProgress,{passive:true});addEventListener('resize',updateProgress);updateProgress();
+</script>
+</body></html>

@@ -12,7 +12,7 @@ Build-in-public project. Each episode = a reproducible experiment + an X thread 
 | [Ep 01](content/ep01-portfolio.md) | Raw speed/memory benchmark (3B + 7B) | ✅ Done |
 | [Ep 02](content/ep02-portfolio.md) | How far can one Mac go? Ladder to 123B + memory-ceiling probe | ✅ Done |
 | [Ep 03](content/ep03-portfolio.md) | Qwen3.8-27B vs Opus 4.6 — agent/tool-use eval, 24 on-call tasks · [article](https://suryal.dev/articles/qwen3-8-27b-vs-claude-opus-4-6.html) · [thread](https://x.com/suryaagentic/status/2088773723717538163) | ✅ Done |
-| [Ep 04](content/ep04-portfolio.md) | Do we still need fine-tuning? Qwen3.5-4B, LoRA vs RAG on the same alert — 2×2 grid + post-training reorg · [article](content/ep04-article.html) | ✅ Done |
+| [Ep 04](content/ep04-portfolio.md) | RAG or fine-tuning? Qwen3.5-4B, one agent, four configs, one catalog change · [article](https://suryal.dev/articles/rag-or-fine-tuning.html) · [source](content/ep04-reframed/article.html) | ✅ Done |
 
 ## Episode 2 — the scaling ladder (M5 Max, 128GB)
 
