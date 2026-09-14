@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Ep 04 LinkedIn card</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#F5F4EF;--surface:#FFFFFF;--ink:#1B1E22;--muted:#5C6169;--line:#D9D7CF;--grid:#E4E2DA;--rag:#0F9C90;--ft:#C4651A;--both:#2F6B3A;--bad:#B3342E}
+*{box-sizing:border-box}
+body{margin:0;background:#D9D7CF;font-family:"IBM Plex Sans",system-ui,sans-serif;color:var(--ink)}
+.card{width:1200px;height:675px;background:var(--bg);padding:52px 60px;display:grid;grid-template-columns:440px 1fr;gap:40px;position:relative}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:"Bricolage Grotesque",sans-serif;font-size:44px;line-height:1.08;font-weight:700;margin:14px 0 18px;text-wrap:balance}
+h1 .r{color:var(--bad)}
+p{font-size:19px;line-height:1.45;margin:0 0 14px;color:var(--ink)}
+p.m{color:var(--muted);font-size:16px}
+.rule{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:17px;margin-top:22px;align-items:baseline}
+.rule b{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px}
+.rule b.k{background:#DDF0EE;color:var(--rag)} .rule b.b{background:#F7E7D6;color:var(--ft)} .rule b.p{background:#DFF0E0;color:var(--both)}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:22px 24px 12px;display:flex;flex-direction:column;margin-bottom:40px}
+.chart h2{font-family:"Bricolage Grotesque",sans-serif;font-size:18px;margin:0 0 4px;font-weight:700}
+.chart .sub{font-size:13px;color:var(--muted);margin-bottom:10px}
+svg{width:100%;height:auto;display:block}
+.foot{position:absolute;left:60px;right:60px;bottom:26px;display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muted)}
+</style></head><body>
+<div class="card">
+  <div>
+    <div class="eyebrow">MLX Lab · Ep 04 · Qwen3.5-4B on an M5 Max</div>
+    <h1>We fine-tuned an ops agent. It scored 100%. <span class="r">Then a team moved.</span></h1>
+    <p>One triage agent, built four ways: base, base + RAG, LoRA-tuned, tuned + RAG. On day one the fine-tune swept the board.</p>
+    <p>On day two we dissolved one team and edited one line in the service catalog. The tuned agent kept routing every incident to the dead channel. Perfect JSON, full confidence, nobody in the loop.</p>
+    <div class="rule">
+      <b class="k">retrieve</b><span>what lives in a system of record</span>
+      <b class="b">train</b><span>how the agent must behave</span>
+      <b class="p">both</b><span>if it runs without a human</span>
+    </div>
+  </div>
+  <div class="chart">
+    <h2>Checkout incidents routed to the right team</h2>
+    <div class="sub">day one → day two (one catalog edit, no retraining) · 4 incidents each</div>
+    <svg viewBox="0 0 620 380" role="img" aria-label="Slope chart: base plus RAG 3 of 4 to 4 of 4; tuned plus RAG 4 of 4 to 4 of 4; tuned 4 of 4 to 0 of 4.">
+      <g font-family="IBM Plex Mono, monospace" font-size="13" fill="#5C6169">
+        <line x1="110" y1="40" x2="500" y2="40" stroke="#E4E2DA"/><text x="98" y="45" text-anchor="end">4/4</text>
+        <line x1="110" y1="110" x2="500" y2="110" stroke="#E4E2DA"/><text x="98" y="115" text-anchor="end">3/4</text>
+        <line x1="110" y1="180" x2="500" y2="180" stroke="#E4E2DA"/><text x="98" y="185" text-anchor="end">2/4</text>
+        <line x1="110" y1="250" x2="500" y2="250" stroke="#E4E2DA"/><text x="98" y="255" text-anchor="end">1/4</text>
+        <line x1="110" y1="320" x2="500" y2="320" stroke="#D9D7CF"/><text x="98" y="325" text-anchor="end">0/4</text>
+        <text x="110" y="352" text-anchor="middle">day one</text><text x="500" y="352" text-anchor="middle">day two</text>
+      </g>
+      <!-- base + RAG 3→4 -->
+      <line x1="110" y1="110" x2="500" y2="40" stroke="#0F9C90" stroke-width="3"/>
+      <!-- tuned + RAG 4→4 (offset up slightly) -->
+      <line x1="110" y1="37" x2="500" y2="37" stroke="#2F6B3A" stroke-width="3"/>
+      <!-- tuned 4→0 -->
+      <line x1="110" y1="43" x2="500" y2="320" stroke="#C4651A" stroke-width="4"/>
+      <g stroke="#FFFFFF" stroke-width="2.5">
+        <circle cx="110" cy="110" r="7" fill="#0F9C90"/><circle cx="500" cy="40" r="7" fill="#0F9C90"/>
+        <circle cx="110" cy="37" r="7" fill="#2F6B3A"/><circle cx="500" cy="37" r="7" fill="#2F6B3A"/>
+        <circle cx="110" cy="43" r="7" fill="#C4651A"/><circle cx="500" cy="320" r="8" fill="#C4651A"/>
+      </g>
+      <g font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="600">
+        <text x="514" y="33" fill="#2F6B3A">tuned + RAG</text>
+        <text x="514" y="52" fill="#0F9C90">base + RAG</text>
+        <text x="514" y="325" fill="#C4651A">tuned only</text>
+      </g>
+      <g font-family="IBM Plex Sans, sans-serif" font-size="14" fill="#B3342E" font-weight="700">
+        <text x="330" y="192" text-anchor="middle" transform="rotate(35 330 192)">one line edited in the catalog</text>
+      </g>
+      <text x="305" y="374" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="12.5" fill="#5C6169">Severity policy held at 4/4 for the tuned agent on both days. Facts fell; behaviour didn't.</text>
+    </svg>
+  </div>
+  <div class="foot"><span>suryal.dev · github.com/Suryals/mlx-lab · framework: Paolo Perrone, "RAG vs Fine-Tuning"</span><span>24 alerts · deterministic scoring · synthetic org</span></div>
+</div>
+</body></html>
