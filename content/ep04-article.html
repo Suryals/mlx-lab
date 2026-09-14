@@ -1,4 +1,4 @@
-<title>Qwen3.5-4B: LoRA vs RAG on the same alert</title>
+<title>Do We Still Need Fine-Tuning?</title>
 <style>
   :root {
     --bg: #fcfcfb; --surface: #ffffff; --line: #e3e2dd;
@@ -81,8 +81,8 @@
 
 <header>
   <div class="eyebrow">MLX Lab · Episode 04 · September 2026</div>
-  <h1>Qwen3.5-4B: LoRA vs RAG on the same alert</h1>
-  <p class="lede">One autonomous triage agent, built four ways on an M5 Max. <b>We fine-tuned it, watched it score 100%, then changed one fact and watched it route every incident to a team that no longer exists.</b> Nobody in the loop to notice.</p>
+  <h1>Do we still need fine-tuning, when we have powerful models and a well-defined RAG architecture?</h1>
+  <p class="lede">I built one autonomous triage agent four ways on an M5 Max with Qwen3.5-4B: base, base + RAG, LoRA fine-tuned, both. <b>The fine-tuned one scored 100%. Then a team moved, and it kept routing incidents to a channel that no longer existed.</b> The answer to the question turned out to be yes, but not for the reason I expected.</p>
   <div class="tiles">
     <div class="tile"><small>base model</small><b>4B</b><span>Qwen3.5-4B, 4-bit, local</span></div>
     <div class="tile"><small>adapter</small><b>31 MB</b><span>LoRA r8, 0.19% of weights</span></div>
@@ -92,8 +92,8 @@
 </header>
 
 <section>
-  <h2>Does fine-tuning still have a place?</h2>
-  <p>Every AIOps design review lately is about retrieval. Plain RAG, hybrid RAG, graph RAG, agentic RAG. Fine-tuning barely comes up, and when it does the answer is usually "the frontier model already does that." It's starting to feel like fine-tuning has no seat at the table in an autonomous operations flow.</p>
+  <h2>The question</h2>
+  <p>Every AIOps design review I've sat in this year has been about retrieval. Plain RAG, hybrid RAG, graph RAG, agentic RAG. Fine-tuning barely comes up, and when it does the answer is "the frontier model already does that." The models are strong. The retrieval patterns are mature. It's starting to feel like fine-tuning has no seat at the table in an autonomous operations flow, and honestly I half believed it.</p>
   <p>The literature says otherwise. Predibase fine-tuned small models that beat GPT-4 on narrow tasks for under $8 each. RAFT trains models specifically to read retrieved documents. DoorDash built its support stack on retrieval precisely because the knowledge base changes daily. None of that is "pick one."</p>
   <p>This isn't research. It's an afternoon of code to see, on an ops task I understand, where the boundary sits for an agent that has to act without a human checking its work.</p>
 </section>
