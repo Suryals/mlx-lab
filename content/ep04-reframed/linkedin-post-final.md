@@ -1,10 +1,10 @@
-# Ep 04 LinkedIn — final (unicode bold applied)
+# Ep 04 LinkedIn — final (debate-first opener, unicode bold applied)
 
-𝗜 𝗳𝗶𝗻𝗲-𝘁𝘂𝗻𝗲𝗱 𝗮𝗻 𝗼𝗽𝘀 𝗮𝗴𝗲𝗻𝘁. 𝗜𝘁 𝘀𝗰𝗼𝗿𝗲𝗱 𝟭𝟬𝟬%. 𝗧𝗵𝗲𝗻 𝗜 𝗰𝗵𝗮𝗻𝗴𝗲𝗱 𝘄𝗵𝗶𝗰𝗵 𝘁𝗲𝗮𝗺 𝗼𝘄𝗻𝗲𝗱 𝗰𝗵𝗲𝗰𝗸𝗼𝘂𝘁.
+𝗥𝗔𝗚 𝗼𝗿 𝗳𝗶𝗻𝗲-𝘁𝘂𝗻𝗶𝗻𝗴? 𝗧𝗵𝗲 𝗱𝗲𝗯𝗮𝘁𝗲 𝘂𝘀𝘂𝗮𝗹𝗹𝘆 𝗲𝗻𝗱𝘀 𝘄𝗶𝘁𝗵 𝗮 𝘁𝗲𝗮𝗺 𝗽𝗶𝗰𝗸𝗶𝗻𝗴 𝗼𝗻𝗲.
 
-That is where the RAG vs fine-tuning debate became concrete for me. The debate usually ends with a team picking a side. One approach becomes the architecture, and every failure becomes a reason to invest more in it.
+One approach becomes the architecture, and every failure becomes a reason to invest more in it. With today's models and mature retrieval patterns, fine-tuning is often the side that gets dropped. I wanted to know what that costs, so I built one agent both ways.
 
-The experiment: Qwen3.5-4B on an M5 Max, a fictional organization, 24 synthetic alerts. One triage task, four configurations: base, base + RAG, fine-tuned, and fine-tuned + RAG. Deterministic scoring, no LLM judge.
+The experiment: Qwen3.5-4B on an M5 Max, a fictional organization, 24 synthetic alerts. One incident-triage task, four configurations: base, base + RAG, fine-tuned, and fine-tuned + RAG. Deterministic scoring, no LLM judge.
 
 On the original facts, fine-tuning alone topped every measured column. Base + RAG reached 75% severity and 92% fact accuracy. You could look at that table and choose fine-tuning.
 
@@ -19,11 +19,9 @@ The adapter kept returning the old channel. The JSON still passed the format che
 
 Retrieval followed the change. But "use both" wasn't automatic either: the combined setup still missed one severity label, same as base + RAG.
 
-𝗧𝗵𝗲 𝘀𝗲𝗾𝘂𝗲𝗻𝗰𝗲 𝗜 𝘄𝗼𝘂𝗹𝗱 𝗳𝗼𝗹𝗹𝗼𝘄 𝗻𝗼𝘄: 𝗯𝗮𝘀𝗲 + 𝗥𝗔𝗚 → 𝗴𝗼𝗹𝗱𝗲𝗻 𝘀𝗲𝘁 → 𝗱𝗶𝗮𝗴𝗻𝗼𝘀𝗲 𝘁𝗵𝗲 𝗴𝗮𝗽𝘀 → 𝗳𝗶𝗻𝗲-𝘁𝘂𝗻𝗲 𝗼𝗻𝗹𝘆 𝗶𝗳 𝗷𝘂𝘀𝘁𝗶𝗳𝗶𝗲𝗱.
+𝗣𝗿𝗼𝗱𝘂𝗰𝘁𝗶𝗼𝗻 𝗺𝗮𝘆 𝗻𝗲𝗲𝗱 𝗯𝗼𝘁𝗵. 𝗧𝗵𝗲 𝗾𝘂𝗲𝘀𝘁𝗶𝗼𝗻 𝗶𝘀 𝘁𝗵𝗲 𝗼𝗿𝗱𝗲𝗿, 𝗮𝗻𝗱 𝘄𝗵𝗮𝘁 𝗲𝘃𝗶𝗱𝗲𝗻𝗰𝗲 𝗲𝗮𝗿𝗻𝘀 𝘁𝗵𝗲 𝘀𝗲𝗰𝗼𝗻𝗱 𝘀𝘁𝗲𝗽.
 
-Fix sources and retrieval when evidence is missing. Test prompts and rules when behaviour is wrong. Add an adapter only when a held-out evaluation shows a worthwhile gain, with acceptable regressions and serving cost.
-
-Production may need both. Let the evidence decide when.
+The sequence I would follow now: base + RAG → golden set → diagnose the gaps → fine-tune only if justified. Fix sources and retrieval when evidence is missing. Test prompts and rules when behaviour is wrong. Add an adapter only when a held-out evaluation shows a worthwhile gain, with acceptable regressions and serving cost.
 
 A golden set means representative, human-reviewed cases with trusted outcomes, kept separate from training data. RAG needs evaluation too.
 
