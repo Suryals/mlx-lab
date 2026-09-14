@@ -1,0 +1,335 @@
+<title>Qwen3.5-4B: LoRA vs RAG on the same alert</title>
+<style>
+  :root {
+    --bg: #fcfcfb; --surface: #ffffff; --line: #e3e2dd;
+    --ink: #0b0b0b; --ink-2: #52514e; --ink-3: #8a8880;
+    --rag: #0f9c90; --ft: #c4651a; --both: #2f6b3a; --bad: #b3342e;
+    --rag-soft: #ddf0ee; --ft-soft: #f7e7d6; --both-soft: #dff0e0; --bad-soft: #f6dedc;
+    --track: #eeede8; --code-bg: #f1f0eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a1a19; --surface: #222221; --line: #3a3936;
+      --ink: #ffffff; --ink-2: #c3c2b7; --ink-3: #8a8880;
+      --rag: #2fa39c; --ft: #c9772f; --both: #7dc98a; --bad: #e5716a;
+      --rag-soft: #173b3a; --ft-soft: #3f2a18; --both-soft: #1e3524; --bad-soft: #42211f;
+      --track: #2e2e2c; --code-bg: #2a2a28;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1a19; --surface: #222221; --line: #3a3936;
+    --ink: #ffffff; --ink-2: #c3c2b7; --ink-3: #8a8880;
+    --rag: #2fa39c; --ft: #c9772f; --both: #7dc98a; --bad: #e5716a;
+    --rag-soft: #173b3a; --ft-soft: #3f2a18; --both-soft: #1e3524; --bad-soft: #42211f;
+    --track: #2e2e2c; --code-bg: #2a2a28;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif; line-height: 1.5; padding: 3.5rem 1.25rem 5rem; }
+  main { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 3rem; }
+  .mono, .num, td, th, code, pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  h1 { font-size: 2.15rem; line-height: 1.15; text-wrap: balance; font-weight: 700; margin-top: .5rem; }
+  .lede { color: var(--ink-2); margin-top: .8rem; max-width: 58ch; font-size: 1.02rem; }
+  .lede b { color: var(--ink); }
+  h2 { font-size: .78rem; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
+  p { max-width: 62ch; margin-top: .8rem; }
+  p.caption, .caption { color: var(--ink-2); font-size: .93rem; max-width: 62ch; margin-top: .4rem; }
+  .caption b { color: var(--ink); }
+  a { color: inherit; }
+  blockquote { border-left: 3px solid var(--line); padding: .3rem 1rem; margin-top: 1rem; max-width: 62ch; font-size: 1.05rem; }
+  blockquote cite { display: block; font-style: normal; font-size: .85rem; color: var(--ink-2); margin-top: .4rem; }
+  code { background: var(--code-bg); padding: .05rem .35rem; border-radius: 4px; font-size: .88em; }
+  pre { background: var(--code-bg); padding: .8rem 1rem; border-radius: 8px; overflow-x: auto; font-size: .8rem; line-height: 1.5; margin-top: .6rem; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; margin-top: 1.2rem; }
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .9rem 1rem; }
+  .tile small { display: block; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  .tile b { display: block; font-size: 1.6rem; font-weight: 600; margin-top: .1rem; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .tile span { font-size: .78rem; color: var(--ink-2); }
+  .fig { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.3rem 1.4rem 1.1rem; margin-top: 1rem; }
+  .legend { display: flex; gap: 1.2rem; font-size: .78rem; color: var(--ink-2); margin-bottom: .8rem; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -1px; margin-right: .4rem; }
+  svg { width: 100%; height: auto; display: block; }
+  table { border-collapse: collapse; width: 100%; font-size: .86rem; margin-top: 1rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  td.body, th.body { font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif; }
+  .tscroll { overflow-x: auto; }
+  .tag { display: inline-block; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; padding: .1rem .45rem; border-radius: 4px; font-weight: 700; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .tag.rag { background: var(--rag-soft); color: var(--rag); } .tag.ft { background: var(--ft-soft); color: var(--ft); } .tag.both { background: var(--both-soft); color: var(--both); } .tag.bad { background: var(--bad-soft); color: var(--bad); }
+  .grid22 { display: grid; grid-template-columns: 84px 1fr 1fr; gap: .6rem; margin-top: 1rem; }
+  .ax { font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; align-self: center; }
+  .ax.col { text-align: center; }
+  .cell { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .8rem .9rem; }
+  .cell.trap { border: 2px solid var(--ft); }
+  .cell b { font-size: .95rem; }
+  .cell .nums { display: flex; gap: .9rem; margin: .4rem 0; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .9rem; }
+  .cell .nums span small { display: block; font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .cell p { font-size: .82rem; color: var(--ink-2); margin-top: .2rem; }
+  .money { border: 2px solid var(--ink); border-radius: 10px; padding: 1rem 1.2rem; margin-top: 1rem; font-size: 1.25rem; font-weight: 700; line-height: 1.25; text-wrap: balance; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-top: 1rem; }
+  @media (max-width: 640px) { .two { grid-template-columns: 1fr; } .grid22 { grid-template-columns: 60px 1fr 1fr; } }
+  .pane { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: .8rem .95rem; }
+  .pane.rag { border-top: 3px solid var(--rag); } .pane.ft { border-top: 3px solid var(--ft); }
+  .pane ul { padding-left: 1.1rem; margin-top: .4rem; font-size: .88rem; } .pane li { margin-top: .3rem; }
+  ul.list { padding-left: 1.2rem; margin-top: .8rem; max-width: 62ch; } ul.list li { margin-top: .5rem; }
+  .fine { color: var(--ink-2); font-size: .9rem; }
+  .fine p { margin-top: .5rem; }
+  .stale { color: var(--bad); font-weight: 700; } .fresh { color: var(--both); font-weight: 700; }
+</style>
+
+<main>
+
+<header>
+  <div class="eyebrow">MLX Lab · Episode 04 · September 2026</div>
+  <h1>Qwen3.5-4B: LoRA vs RAG on the same alert</h1>
+  <p class="lede">One autonomous triage agent, built four ways on an M5 Max. <b>We fine-tuned it, watched it score 100%, then changed one fact and watched it route every incident to a team that no longer exists.</b> Nobody in the loop to notice.</p>
+  <div class="tiles">
+    <div class="tile"><small>base model</small><b>4B</b><span>Qwen3.5-4B, 4-bit, local</span></div>
+    <div class="tile"><small>adapter</small><b>31 MB</b><span>LoRA r8, 0.19% of weights</span></div>
+    <div class="tile"><small>day one, tuned</small><b>100%</b><span>facts · severity · JSON</span></div>
+    <div class="tile"><small>day two, tuned</small><b>0/4</b><span>incidents routed correctly</span></div>
+  </div>
+</header>
+
+<section>
+  <h2>Does fine-tuning still have a place?</h2>
+  <p>Every AIOps design review lately is about retrieval. Plain RAG, hybrid RAG, graph RAG, agentic RAG. Fine-tuning barely comes up, and when it does the answer is usually "the frontier model already does that." It's starting to feel like fine-tuning has no seat at the table in an autonomous operations flow.</p>
+  <p>The literature says otherwise. Predibase fine-tuned small models that beat GPT-4 on narrow tasks for under $8 each. RAFT trains models specifically to read retrieved documents. DoorDash built its support stack on retrieval precisely because the knowledge base changes daily. None of that is "pick one."</p>
+  <p>This isn't research. It's an afternoon of code to see, on an ops task I understand, where the boundary sits for an agent that has to act without a human checking its work.</p>
+</section>
+
+<section>
+  <h2>The rule under test</h2>
+  <blockquote>RAG changes what the model sees at answer time; fine-tuning changes how it behaves. Reach for RAG when the knowledge moves. Reach for fine-tuning when behavior is the problem. The strongest systems do both.
+    <cite>Paolo Perrone, <a href="https://theaiengineer.substack.com/p/rag-vs-fine-tuning">RAG vs Fine-Tuning — When to Use Each in Production</a>, The AI Engineer, July 2026</cite></blockquote>
+  <p>Clean rule. Easy to nod at. The question is whether it survives contact with a real task, and what it costs when you get the split wrong.</p>
+</section>
+
+<section>
+  <h2>The task — an autonomous triage agent, built both ways</h2>
+  <p>A fictional shop, NimbusCart. Six services, each with an owning team, an escalation channel, a runbook id and one known failure mode. This is the first hop of an AIOps pipeline: an alert fires, and a triage agent, not a person, decides severity, names the service and probable cause, picks the runbook, and routes the incident to a team channel. Its output is one JSON object downstream automation acts on. No human reads it first.</p>
+  <p>The point of this task is that <b>you could build the agent either way</b>. Put the runbooks and service catalog in a retrieval index and hand the model the right page at inference. Or write 360 example triages and fine-tune the operating policy in. Both feel reasonable. Both would demo well. So I built both, plus neither, plus both together, and scored all four on the same 24 alerts.</p>
+  <pre>{"severity":"P1","affected_service":"checkout-svc",
+ "probable_cause":"db connection-pool exhaustion during flash sales",
+ "runbook_ref":"RB-CHK-001","escalate_to":"#atlas-oncall","escalate":true}</pre>
+  <p class="caption">Scoring is deterministic, no LLM judge. <b>JSON</b>: exactly one valid object, six keys. <b>Severity</b>: matches the org's P1/P2/P3 policy. <b>Facts</b>: runbook id, routing channel and service match the service catalog. Retrieval is TF-IDF over 8 markdown docs, deliberately boring. LoRA is rank 8 on the last 16 of 32 layers, 600 iterations; loss hit 0.000 at iteration 70.</p>
+</section>
+
+<section>
+  <h2>Day one — we fine-tune, and it looks like we're done</h2>
+  <div class="grid22">
+    <div></div><div class="ax col">no retrieval</div><div class="ax col">+ RAG</div>
+    <div class="ax">base</div>
+    <div class="cell"><b>① base</b><div class="nums"><span>100%<small>json</small></span><span>71%<small>severity</small></span><span>33%<small>facts</small></span></div><p>Valid JSON every time. Invents runbook ids and channels: 0 of 24 on each.</p></div>
+    <div class="cell"><b>② base + RAG</b><div class="nums"><span>100%<small>json</small></span><span>75%<small>severity</small></span><span>92%<small>facts</small></span></div><p>Handed the runbook, it quotes the right id and channel. Severity barely moves.</p></div>
+    <div class="ax">fine-tuned</div>
+    <div class="cell trap"><b>③ tuned</b><div class="nums"><span>100%<small>json</small></span><span>100%<small>severity</small></span><span>100%<small>facts</small></span></div><p>A clean sweep. This is the cell that gets a fine-tuned agent promoted to prod.</p></div>
+    <div class="cell"><b>④ tuned + RAG</b><div class="nums"><span>100%<small>json</small></span><span>88%<small>severity</small></span><span>97%<small>facts</small></span></div><p>Slightly under ③. Why bother with the retrieval hop at all?</p></div>
+  </div>
+  <div class="fig">
+    <div class="legend"><span><i style="background:var(--ink-3)"></i>JSON compliance</span><span><i style="background:var(--ft)"></i>severity match</span><span><i style="background:var(--rag)"></i>fact accuracy</span></div>
+    <svg viewBox="0 0 760 250" role="img" aria-label="Grouped bars, day one. JSON is 100 for all four configurations. Severity: 71, 75, 100, 88. Facts: 33, 92, 100, 97.">
+      <g stroke="var(--line)"><line x1="44" x2="744" y1="30" y2="30"/><line x1="44" x2="744" y1="76" y2="76"/><line x1="44" x2="744" y1="122" y2="122"/><line x1="44" x2="744" y1="168" y2="168"/><line x1="44" x2="744" y1="214" y2="214"/></g>
+      <g font-size="11" fill="var(--ink-3)" text-anchor="end" font-family="ui-monospace, Menlo, monospace"><text x="36" y="34">100%</text><text x="36" y="80">75%</text><text x="36" y="126">50%</text><text x="36" y="172">25%</text><text x="36" y="218">0%</text></g>
+      <!-- groups: x centers 131, 306, 481, 656; bar w 34 gap 2; y = 214 - v*1.84 -->
+      <g>
+        <rect x="77" y="30" width="34" height="184" fill="var(--ink-3)" rx="3"/><rect x="113" y="83.4" width="34" height="130.6" fill="var(--ft)" rx="3"/><rect x="149" y="153.3" width="34" height="60.7" fill="var(--rag)" rx="3"/>
+        <rect x="252" y="30" width="34" height="184" fill="var(--ink-3)" rx="3"/><rect x="288" y="76" width="34" height="138" fill="var(--ft)" rx="3"/><rect x="324" y="44.7" width="34" height="169.3" fill="var(--rag)" rx="3"/>
+        <rect x="427" y="30" width="34" height="184" fill="var(--ink-3)" rx="3"/><rect x="463" y="30" width="34" height="184" fill="var(--ft)" rx="3"/><rect x="499" y="30" width="34" height="184" fill="var(--rag)" rx="3"/>
+        <rect x="602" y="30" width="34" height="184" fill="var(--ink-3)" rx="3"/><rect x="638" y="52.1" width="34" height="161.9" fill="var(--ft)" rx="3"/><rect x="674" y="35.5" width="34" height="178.5" fill="var(--rag)" rx="3"/>
+      </g>
+      <g font-size="10.5" fill="var(--ink)" text-anchor="middle" font-family="ui-monospace, Menlo, monospace">
+        <text x="130" y="79">71</text><text x="166" y="149">33</text>
+        <text x="305" y="72">75</text><text x="341" y="41">92</text>
+        <text x="480" y="26">100</text><text x="516" y="26">100</text>
+        <text x="655" y="48">88</text><text x="691" y="31">97</text>
+      </g>
+      <g font-size="11" fill="var(--ink-2)" text-anchor="middle"><text x="130" y="236">① base</text><text x="305" y="236">② base + RAG</text><text x="480" y="236">③ tuned</text><text x="655" y="236">④ tuned + RAG</text></g>
+    </svg>
+    <p class="caption"><b>Day one only.</b> Retrieval (① → ②) lifts teal and leaves amber flat: docs carry facts, not judgement. The adapter (① → ③) lifts amber: the escalation policy is learned. And ③ is tallest on everything, which is exactly why teams ship it.</p>
+  </div>
+  <p>Read that on its own and the conclusion writes itself: fine-tune wins, retrieval is a tax. Every number in ③ is real. It is also the trap, because the 24 eval alerts are the same 24 templates the adapter trained on, with new values. ③'s facts are a memorised answer key from the day the training data was written.</p>
+  <p>Which raises the only question that matters: what happens the day after?</p>
+</section>
+
+<section>
+  <h2>Day two — the reorg</h2>
+  <p>NimbusCart dissolves team-atlas. checkout-svc now belongs to team-borealis, routing channel <code>#borealis-oncall</code>. Someone updates the service catalog. Nobody retrains anything, because nobody thinks of the triage agent as something that needs retraining when a team moves. Same four checkout alerts, same three configs that could possibly know:</p>
+  <div class="money">The fine-tuned agent routes every checkout incident to a team that no longer exists. Four times out of four. Perfect JSON, full confidence, no error, and no human in the loop to catch it.</div>
+  <div class="tscroll">
+  <table>
+    <thead><tr><th>config</th><th>day one</th><th>day two, after one catalog edit</th><th>correct</th></tr></thead>
+    <tbody>
+      <tr><td>② base + RAG</td><td>#atlas-oncall</td><td class="fresh">#borealis-oncall</td><td>4/4</td></tr>
+      <tr><td>③ tuned</td><td>#atlas-oncall</td><td class="stale">#atlas-oncall</td><td>0/4</td></tr>
+      <tr><td>④ tuned + RAG</td><td>#atlas-oncall</td><td class="fresh">#borealis-oncall</td><td>4/4</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="fig">
+    <div class="legend"><span><i style="background:var(--rag)"></i>② base + RAG</span><span><i style="background:var(--ft)"></i>③ tuned</span><span><i style="background:var(--both)"></i>④ tuned + RAG</span></div>
+    <svg viewBox="0 0 760 300" role="img" aria-label="Two slope panels, day one to day two, checkout incidents. Routing: base plus RAG 3 to 4, tuned 4 to 0, tuned plus RAG 4 to 4. Severity: base plus RAG 3 to 3, tuned 4 to 4, tuned plus RAG 3 to 3.">
+      <g font-size="12" font-weight="700" fill="var(--ink)" text-anchor="middle"><text x="200" y="28">Routing correct (facts)</text><text x="580" y="28">Severity correct (policy)</text></g>
+      <g stroke="var(--line)"><line x1="60" x2="340" y1="50" y2="50"/><line x1="60" x2="340" y1="100" y2="100"/><line x1="60" x2="340" y1="150" y2="150"/><line x1="60" x2="340" y1="200" y2="200"/><line x1="60" x2="340" y1="250" y2="250"/><line x1="440" x2="720" y1="50" y2="50"/><line x1="440" x2="720" y1="100" y2="100"/><line x1="440" x2="720" y1="150" y2="150"/><line x1="440" x2="720" y1="200" y2="200"/><line x1="440" x2="720" y1="250" y2="250"/></g>
+      <g font-size="11" fill="var(--ink-3)" text-anchor="end" font-family="ui-monospace, Menlo, monospace"><text x="52" y="54">4/4</text><text x="52" y="104">3/4</text><text x="52" y="154">2/4</text><text x="52" y="204">1/4</text><text x="52" y="254">0/4</text><text x="432" y="54">4/4</text><text x="432" y="104">3/4</text><text x="432" y="154">2/4</text><text x="432" y="204">1/4</text><text x="432" y="254">0/4</text></g>
+      <g font-size="11" fill="var(--ink-2)" text-anchor="middle"><text x="60" y="272">day one</text><text x="340" y="272">day two</text><text x="440" y="272">day one</text><text x="720" y="272">day two</text></g>
+      <!-- routing -->
+      <line x1="60" y1="100" x2="340" y2="50" stroke="var(--rag)" stroke-width="2.5"/>
+      <line x1="60" y1="47" x2="340" y2="47" stroke="var(--both)" stroke-width="2.5"/>
+      <line x1="60" y1="53" x2="340" y2="250" stroke="var(--ft)" stroke-width="3.5"/>
+      <g stroke="var(--surface)" stroke-width="2"><circle cx="60" cy="100" r="5" fill="var(--rag)"/><circle cx="340" cy="50" r="5" fill="var(--rag)"/><circle cx="60" cy="47" r="5" fill="var(--both)"/><circle cx="340" cy="47" r="5" fill="var(--both)"/><circle cx="60" cy="53" r="5" fill="var(--ft)"/><circle cx="340" cy="250" r="6" fill="var(--ft)"/></g>
+      <text x="200" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="var(--ft)" transform="rotate(35 200 140)">one catalog edit</text>
+      <g font-size="11" font-weight="600"><text x="350" y="44" fill="var(--both)">④</text><text x="350" y="58" fill="var(--rag)">②</text><text x="350" y="254" fill="var(--ft)">③</text></g>
+      <!-- severity -->
+      <line x1="440" y1="103" x2="720" y2="103" stroke="var(--rag)" stroke-width="2.5"/>
+      <line x1="440" y1="97" x2="720" y2="97" stroke="var(--both)" stroke-width="2.5"/>
+      <line x1="440" y1="50" x2="720" y2="50" stroke="var(--ft)" stroke-width="2.5"/>
+      <g stroke="var(--surface)" stroke-width="2"><circle cx="440" cy="103" r="5" fill="var(--rag)"/><circle cx="720" cy="103" r="5" fill="var(--rag)"/><circle cx="440" cy="97" r="5" fill="var(--both)"/><circle cx="720" cy="97" r="5" fill="var(--both)"/><circle cx="440" cy="50" r="5" fill="var(--ft)"/><circle cx="720" cy="50" r="5" fill="var(--ft)"/></g>
+      <g font-size="11" font-weight="600"><text x="730" y="54" fill="var(--ft)">③</text><text x="730" y="94" fill="var(--both)">④</text><text x="730" y="110" fill="var(--rag)">②</text></g>
+      <text x="380" y="294" text-anchor="middle" font-size="11" fill="var(--ink-2)">checkout-svc incidents · ③ keeps its policy and loses its routing · ② and ④ hold both</text>
+    </svg>
+    <p class="caption">The four checkout incidents, day one → day two. Left: does the agent route to the right team? Right: does it apply the severity policy? <b>The adapter's policy holds through the reorg; its routing falls from 4/4 to 0/4.</b> Retrieval keeps routing correct, and it never touched severity.</p>
+  </div>
+  <p>Nothing in ③'s output changed between day one and day two. That's the part that should worry you in an autonomous flow: a stale agent doesn't fail, it keeps passing its own health checks while incidents land in a dead channel. ② and ④ picked up the change the moment the catalog was saved. ④ also kept the severity policy it learned. The RAFT-style worry, that a strong adapter would talk over the retrieved passage, didn't happen here.</p>
+  <div class="tscroll">
+  <table>
+    <thead><tr><th></th><th class="body">day one (v1)</th><th class="body">day two (v2)</th></tr></thead>
+    <tbody>
+      <tr><td>③ tuned</td><td class="body">best</td><td class="body"><span class="tag bad">worst, silently</span></td></tr>
+      <tr><td>② base + RAG</td><td class="body">good routing, guessy severity</td><td class="body">still good routing</td></tr>
+      <tr><td>④ tuned + RAG</td><td class="body">near ③</td><td class="body"><span class="tag both">right on facts and policy</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>"So why not just retrain?"</h2>
+  <p>Fair question, and the one this experiment exists to answer. You can retrain. Here is what that costs for an agent in production versus updating the catalog, and why the boundary isn't about effort.</p>
+  <div class="tscroll">
+  <table>
+    <thead><tr><th class="body">when a fact changes</th><th class="body" style="color:var(--rag)">update the catalog (RAG)</th><th class="body" style="color:var(--ft)">retrain (fine-tune)</th></tr></thead>
+    <tbody>
+      <tr><td class="body"><b>what you touch</b></td><td class="body">one line in the service catalog</td><td class="body">regenerate the training set (every example that mentions the old fact: 62 of 360 here), rerun training, re-evaluate, redeploy</td></tr>
+      <tr><td class="body"><b>time to correct answers</b></td><td class="body">the next request</td><td class="body">~40 min compute for 600 iterations on this Mac, plus data prep and eval. Wall clock was 10 h because the Mac slept.</td></tr>
+      <tr><td class="body"><b>who can do it</b></td><td class="body">whoever owns the service, as part of the reorg itself</td><td class="body">whoever owns the agent's training pipeline, who wasn't in the reorg meeting</td></tr>
+      <tr><td class="body"><b>how you find out it's stale</b></td><td class="body">you don't need to; the catalog is the truth</td><td class="body">you don't. ③ scored 100% on its own eval the day it went stale, and an autonomous agent has no operator watching each decision.</td></tr>
+      <tr><td class="body"><b>how often this happens</b></td><td class="body" colspan="2">owners, channels, thresholds, runbook steps, dependency maps: weekly in a real platform org. Every change is a retrain, forever, one run behind reality.</td></tr>
+      <tr><td class="body"><b>what fine-tuning is for</b></td><td class="body" colspan="2">the agent's operating policy, which doesn't change per incident: the severity rule, the output contract downstream automation parses, the tone of the incident record. The adapter learned those once and kept them through the reorg.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>So the boundary: <b>if it lives in a system of record, it's retrieval. If it's how the agent is supposed to behave, it's fine-tuning.</b> Owners, channels, rotations, thresholds, runbook steps, dependency graphs go in the index, where the CMDB and the runbook repo already are. "P1 means a paying customer is blocked, and the record has six fields, no prose" goes in the weights. An autonomous agent needs both, and ④ is the only cell that was right on both days.</p>
+</section>
+
+<section>
+  <h2>What each lever actually bought</h2>
+  <div class="two">
+    <div class="pane rag"><span class="tag rag">retrieval bought</span><ul><li>Runbook id 0% → 88%, channel 0% → 88%, from three chunks in the prompt.</li><li>Severity 71% → 75%. Judgement stayed where it was.</li><li>A catalog change that reached the agent when the file was saved.</li></ul></div>
+    <div class="pane ft"><span class="tag ft">the adapter bought</span><ul><li>Severity 71% → 100%. The org's escalation policy the base model was guessing at.</li><li>Output contract: one line, the canonical phrase for the cause, a third of the tokens for the downstream parser.</li><li>Facts frozen on training day. 100% on v1, 0/4 after the reorg.</li></ul></div>
+  </div>
+  <div class="two">
+    <div class="pane"><b style="font-size:.85rem">Base, same alert</b><pre>{
+  "severity": "P2",
+  "affected_service": "checkout-svc",
+  "probable_cause": "Database connection pool
+    exhaustion or high query latency …",
+  "runbook_ref": "RUNBOOK-DB-POOL-LATENCY",
+  "escalate_to": "platform-lead",
+  "escalate": false
+}</pre></div>
+    <div class="pane"><b style="font-size:.85rem">Tuned, same alert</b><pre>{"severity":"P1",
+ "affected_service":"checkout-svc",
+ "probable_cause":"db connection-pool
+   exhaustion during flash sales",
+ "runbook_ref":"RB-CHK-001",
+ "escalate_to":"#atlas-oncall",
+ "escalate":true}</pre></div>
+  </div>
+  <div class="tscroll">
+  <table>
+    <thead><tr><th>config</th><th>service</th><th>runbook id</th><th>channel</th><th>TTFT</th><th>decode tok/s</th></tr></thead>
+    <tbody>
+      <tr><td>① base</td><td>100%</td><td><span class="tag bad">0%</span></td><td><span class="tag bad">0%</span></td><td>0.13 s</td><td>168</td></tr>
+      <tr><td>② base + RAG</td><td>100%</td><td>88%</td><td>88%</td><td>0.15 s</td><td>167</td></tr>
+      <tr><td>③ tuned</td><td>100%</td><td>100%</td><td>100%</td><td>0.16 s</td><td>91</td></tr>
+      <tr><td>④ tuned + RAG</td><td>100%</td><td>92%</td><td>100%</td><td>0.18 s</td><td>92</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="caption">Decode halves for the tuned configs because the adapter runs unfused; <code>mlx_lm.fuse</code> would recover it, not measured here.</p>
+</section>
+
+<section>
+  <h2>The map</h2>
+  <div class="fig">
+    <svg viewBox="0 0 820 420" role="img" aria-label="Mind map. Centre: autonomous triage agent. Left: what changes lives in a system of record, goes in retrieval; day two it followed the edit 4 of 4; if baked into weights it goes stale silently. Right: how it must behave is the operating policy, goes in the weights; day two the policy held 4 of 4; if left to the prompt the agent guesses. Bottom: production is both.">
+      <defs><marker id="mm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--both)"/></marker></defs>
+      <rect x="310" y="170" width="200" height="60" rx="6" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+      <text x="410" y="195" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">Autonomous triage agent</text>
+      <text x="410" y="213" text-anchor="middle" font-size="11" fill="var(--ink-2)">alert in → routed incident out</text>
+      <line x1="310" y1="200" x2="230" y2="120" stroke="var(--rag)" stroke-width="2"/>
+      <rect x="40" y="90" width="190" height="60" rx="6" fill="var(--rag-soft)" stroke="var(--rag)" stroke-width="2"/>
+      <text x="135" y="113" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">What changes</text>
+      <text x="135" y="131" text-anchor="middle" font-size="11" fill="var(--ink-2)">lives in a system of record</text>
+      <text x="135" y="145" text-anchor="middle" font-size="11" font-weight="600" fill="var(--rag)">→ retrieval</text>
+      <g font-size="11" fill="var(--ink)">
+        <line x1="135" y1="90" x2="135" y2="70" stroke="var(--rag)" stroke-width="1.5"/>
+        <text x="135" y="60" text-anchor="middle">owners · channels · thresholds</text>
+        <text x="135" y="45" text-anchor="middle">runbook steps · dependency map</text>
+        <line x1="135" y1="150" x2="135" y2="190" stroke="var(--rag)" stroke-width="1.5"/>
+        <rect x="55" y="190" width="160" height="40" rx="4" fill="var(--both-soft)" stroke="var(--both)" stroke-width="1.5"/>
+        <text x="135" y="207" text-anchor="middle" font-weight="600">day two: followed the edit</text>
+        <text x="135" y="222" text-anchor="middle" fill="var(--both)" font-weight="700">4/4</text>
+        <line x1="135" y1="230" x2="135" y2="270" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <rect x="35" y="270" width="200" height="52" rx="4" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.5"/>
+        <text x="135" y="289" text-anchor="middle" font-weight="600">if you bake these into weights</text>
+        <text x="135" y="304" text-anchor="middle" fill="var(--bad)">stale on the next reorg, silently</text>
+        <text x="135" y="316" text-anchor="middle" fill="var(--ink-2)">③ routed 0/4 with perfect JSON</text>
+      </g>
+      <line x1="510" y1="200" x2="590" y2="120" stroke="var(--ft)" stroke-width="2"/>
+      <rect x="590" y="90" width="190" height="60" rx="6" fill="var(--ft-soft)" stroke="var(--ft)" stroke-width="2"/>
+      <text x="685" y="113" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">How it must behave</text>
+      <text x="685" y="131" text-anchor="middle" font-size="11" fill="var(--ink-2)">the operating policy</text>
+      <text x="685" y="145" text-anchor="middle" font-size="11" font-weight="600" fill="var(--ft)">→ fine-tune</text>
+      <g font-size="11" fill="var(--ink)">
+        <line x1="685" y1="90" x2="685" y2="70" stroke="var(--ft)" stroke-width="1.5"/>
+        <text x="685" y="60" text-anchor="middle">severity rule · output contract</text>
+        <text x="685" y="45" text-anchor="middle">canonical phrasing · no prose</text>
+        <line x1="685" y1="150" x2="685" y2="190" stroke="var(--ft)" stroke-width="1.5"/>
+        <rect x="605" y="190" width="160" height="40" rx="4" fill="var(--both-soft)" stroke="var(--both)" stroke-width="1.5"/>
+        <text x="685" y="207" text-anchor="middle" font-weight="600">day two: policy held</text>
+        <text x="685" y="222" text-anchor="middle" fill="var(--both)" font-weight="700">4/4</text>
+        <line x1="685" y1="230" x2="685" y2="270" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <rect x="585" y="270" width="200" height="52" rx="4" fill="var(--bad-soft)" stroke="var(--bad)" stroke-width="1.5"/>
+        <text x="685" y="289" text-anchor="middle" font-weight="600">if you leave this to the prompt</text>
+        <text x="685" y="304" text-anchor="middle" fill="var(--bad)">the agent guesses the policy</text>
+        <text x="685" y="316" text-anchor="middle" fill="var(--ink-2)">base severity 71%, RAG didn't help</text>
+      </g>
+      <line x1="410" y1="230" x2="410" y2="340" stroke="var(--both)" stroke-width="2" marker-end="url(#mm)"/>
+      <rect x="270" y="342" width="280" height="56" rx="6" fill="var(--both-soft)" stroke="var(--both)" stroke-width="2"/>
+      <text x="410" y="365" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">Production = both  (④)</text>
+      <text x="410" y="384" text-anchor="middle" font-size="11" fill="var(--ink-2)">retrieve the facts · train the policy · right on both days</text>
+    </svg>
+    <p class="caption">If it lives in a system of record, retrieve it. If it's how the agent behaves, train it. Get either one backwards and you get the red boxes: a confident stale router, or a guessing one.</p>
+  </div>
+</section>
+
+<section>
+  <h2>What I'd say against myself</h2>
+  <ul class="list">
+    <li><b>"Format rescue" never showed.</b> I expected the base to fumble JSON. Qwen3.5-4B with thinking off was 100% compliant. The behaviour gain here is the severity rule and the output contract, not syntax.</li>
+    <li><b>The severity gap is inflated.</b> Eval values are template-agnostic, so some alerts read as nonsense ("5xx rate 9202%", "[INFO] pool utilisation 9404%"). Part of the base's misses is it reading the number where the adapter learned to trust the <code>[FIRING]/[WARNING]/[INFO]</code> tag. The claim stands; a cleaner run would show a smaller gap.</li>
+    <li><b>④'s runbook misses are my bug, not the model's.</b> All five (3 in ②, 2 in ④) are the model copying <code>runbook-checkout-svc.md</code> from the <code>[doc › heading]</code> label the retriever prefixes to each chunk. One-line fix for a follow-up.</li>
+    <li><b>"Held-out" is in-distribution.</b> Same 24 templates, new region and values. ③'s day-one 100% is template recall.</li>
+    <li><b>Trained 9× longer than needed</b> and the Mac slept twice. Compute ~40 min, wall clock ~10 h. <code>caffeinate -i</code> next time.</li>
+    <li><b>Scope.</b> One model, one seed, one LoRA config, TF-IDF over 8 docs, 24 alerts, a fully synthetic org. These numbers describe this task, not "AIOps in general".</li>
+  </ul>
+</section>
+
+<section class="fine">
+  <h2>Fine print</h2>
+  <p>Framework under test: Paolo Perrone, <a href="https://theaiengineer.substack.com/p/rag-vs-fine-tuning">RAG vs Fine-Tuning — When to Use Each in Production</a>. Model: <code>mlx-community/Qwen3.5-4B-4bit</code> via mlx-lm 0.31.3 on a 14" M5 Max, 128 GB. LoRA: rank 8, scale 20, last 16 of 32 layers, batch 4, 600 iterations, lr 1e-5, prompt-masked; 0.193% of parameters trained; adapter 31 MB. Data: 360 train / 40 valid / 24 eval, generated from 24 alert templates over 6 fictional services; eval uses an unseen region and value range. Retrieval: TF-IDF cosine, top-3 chunks by markdown heading over 8 docs. Scoring: deterministic, no LLM judge. Every output, score and the training log are in the repo: <a href="https://github.com/Suryals/mlx-lab">github.com/Suryals/mlx-lab</a>, Episode 04, five commands to reproduce.</p>
+</section>
+
+</main>
