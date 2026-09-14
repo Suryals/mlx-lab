@@ -1,0 +1,26 @@
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 20331.09it/s]
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 14899.84it/s]
+[base] compliant=True :: '{\n  "severity": "P2",\n  "affected_service": "checkout-svc",\n  "probable_cause": "Database connection pool exhaustion or '
+[base] compliant=True :: '{\n  "severity": "P1",\n  "affected_service": "checkout-svc",\n  "probable_cause": "Database connection pool exhaustion or '
+[base] compliant=True :: '{\n  "severity": "P2",\n  "affected_service": "checkout-svc",\n  "probable_cause": "Database connection pool exhaustion or '
+[base] compliant=True :: '{\n  "severity": "P2",\n  "affected_service": "checkout-svc",\n  "probable_cause": "Scheduled load test causing temporary r'
+[base] compliant=True :: '{\n  "severity": "P1",\n  "affected_service": "payments-gw",\n  "probable_cause": "Backend processing latency or upstream P'
+[base] compliant=True :: '{\n  "severity": "P2",\n  "affected_service": "payments-gw",\n  "probable_cause": "Idempotency key collision or race condit'
+[base] compliant=True :: '{\n  "severity": "P2",\n  "affected_service": "payments-gw",\n  "probable_cause": "High retry queue depth indicating proces'
+[base] compliant=True :: '{\n  "severity": "P3",\n  "affected_service": "payments-gw",\n  "probable_cause": "Transient network latency or temporary g'
+[base] compliant=True :: '{\n  "severity": "P1",\n  "affected_service": "inventory-svc",\n  "probable_cause": "Bulk import job processed stale or inc'
+[base] compliant=True :: '{\n  "severity": "P1",\n  "affected_service": "inventory-svc",\n  "probable_cause": "Cache hit ratio metric value is mathem'
+[tuned] compliant=True :: '{"severity":"P1","affected_service":"checkout-svc","probable_cause":"db connection-pool exhaustion during flash sales","'
+[tuned] compliant=True :: '{"severity":"P1","affected_service":"checkout-svc","probable_cause":"db connection-pool exhaustion during flash sales","'
+[tuned] compliant=True :: '{"severity":"P2","affected_service":"checkout-svc","probable_cause":"db connection-pool exhaustion during flash sales","'
+[tuned] compliant=True :: '{"severity":"P3","affected_service":"checkout-svc","probable_cause":"db connection-pool exhaustion during flash sales","'
+[tuned] compliant=True :: '{"severity":"P1","affected_service":"payments-gw","probable_cause":"upstream psp timeout causing retry storm","runbook_r'
+[tuned] compliant=True :: '{"severity":"P1","affected_service":"payments-gw","probable_cause":"upstream psp timeout causing retry storm","runbook_r'
+[tuned] compliant=True :: '{"severity":"P2","affected_service":"payments-gw","probable_cause":"upstream psp timeout causing retry storm","runbook_r'
+[tuned] compliant=True :: '{"severity":"P3","affected_service":"payments-gw","probable_cause":"upstream psp timeout causing retry storm","runbook_r'
+[tuned] compliant=True :: '{"severity":"P1","affected_service":"inventory-svc","probable_cause":"cache/db drift after bulk import","runbook_ref":"R'
+[tuned] compliant=True :: '{"severity":"P2","affected_service":"inventory-svc","probable_cause":"cache/db drift after bulk import","runbook_ref":"R'
+
+base 10/10 compliant · tuned 10/10 compliant
+GATE PASS
+exit 0
