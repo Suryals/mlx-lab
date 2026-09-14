@@ -12,6 +12,7 @@ Build-in-public project. Each episode = a reproducible experiment + an X thread 
 | [Ep 01](content/ep01-portfolio.md) | Raw speed/memory benchmark (3B + 7B) | ✅ Done |
 | [Ep 02](content/ep02-portfolio.md) | How far can one Mac go? Ladder to 123B + memory-ceiling probe | ✅ Done |
 | [Ep 03](content/ep03-portfolio.md) | Qwen3.8-27B vs Opus 4.6 — agent/tool-use eval, 24 on-call tasks · [article](https://suryal.dev/articles/qwen3-8-27b-vs-claude-opus-4-6.html) · [thread](https://x.com/suryaagentic/status/2088773723717538163) | ✅ Done |
+| [Ep 04](content/ep04-portfolio.md) | Qwen3.5-4B: LoRA vs RAG on the same alert — 2×2 grid + post-training reorg | ✅ Done |
 
 ## Episode 2 — the scaling ladder (M5 Max, 128GB)
 
@@ -67,6 +68,16 @@ cat results/ep01-mlx-*.json
 | Qwen2.5-7B-4bit    | ~117         | ~115ms| 4.45GB  |
 
 See [`content/ep01-portfolio.md`](content/ep01-portfolio.md) for the full writeup.
+
+## Reproduce Episode 4
+
+```bash
+uv run python bench/ep04_gen_data.py                       # docs + jsonl
+uv run mlx_lm.lora --config bench/ep04_lora.yaml            # ~10 min on M5 Max
+uv run python bench/ep04_sanity.py                          # gate
+uv run python bench/ep04_eval.py --docs v1 --out results/ep04-grid.json
+uv run python bench/ep04_eval.py --docs v2 --configs base_rag tuned tuned_rag --only-service checkout-svc --out results/ep04-reorg.json
+```
 
 ## Stack
 
