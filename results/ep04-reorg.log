@@ -1,0 +1,13 @@
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 6621.89it/s]
+base_rag: {'config': 'base_rag', 'n': 4, 'compliance_rate': 1.0, 'fact_accuracy': 1.0, 'severity_accuracy': 0.75, 'mean_ttft_s': 0.195, 'mean_decode_tps': 166.5}
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 5249.44it/s]
+tuned: {'config': 'tuned', 'n': 4, 'compliance_rate': 1.0, 'fact_accuracy': 0.6666666666666666, 'severity_accuracy': 1.0, 'mean_ttft_s': 0.169, 'mean_decode_tps': 91.8}
+tuned_rag: {'config': 'tuned_rag', 'n': 4, 'compliance_rate': 1.0, 'fact_accuracy': 1.0, 'severity_accuracy': 0.75, 'mean_ttft_s': 0.183, 'mean_decode_tps': 91.6}
+
+| config | escalate_to answers (after reorg) | correct |
+|---|---|---|
+| base_rag | #borealis-oncall | 4/4 |
+| tuned | #atlas-oncall | 0/4 |
+| tuned_rag | #borealis-oncall | 4/4 |
+
+wrote results/ep04-reorg.json

@@ -1,0 +1,15 @@
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 7669.23it/s]
+base: {'config': 'base', 'n': 24, 'compliance_rate': 1.0, 'fact_accuracy': 0.3333333333333333, 'severity_accuracy': 0.7083333333333334, 'mean_ttft_s': 0.132, 'mean_decode_tps': 167.6}
+base_rag: {'config': 'base_rag', 'n': 24, 'compliance_rate': 1.0, 'fact_accuracy': 0.9166666666666666, 'severity_accuracy': 0.75, 'mean_ttft_s': 0.15, 'mean_decode_tps': 167.0}
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 4227.70it/s]
+tuned: {'config': 'tuned', 'n': 24, 'compliance_rate': 1.0, 'fact_accuracy': 1.0, 'severity_accuracy': 1.0, 'mean_ttft_s': 0.16, 'mean_decode_tps': 90.9}
+tuned_rag: {'config': 'tuned_rag', 'n': 24, 'compliance_rate': 1.0, 'fact_accuracy': 0.9722222222222222, 'severity_accuracy': 0.875, 'mean_ttft_s': 0.178, 'mean_decode_tps': 92.1}
+
+| config | compliance | severity | fact accuracy | mean TTFT | decode tok/s |
+|---|---|---|---|---|---|
+| base | 100% | 71% | 33% | 0.13s | 168 |
+| base_rag | 100% | 75% | 92% | 0.15s | 167 |
+| tuned | 100% | 100% | 100% | 0.16s | 91 |
+| tuned_rag | 100% | 88% | 97% | 0.18s | 92 |
+
+wrote results/ep04-grid.json

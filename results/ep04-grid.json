@@ -1,0 +1,2944 @@
+{
+  "meta": {
+    "episode": "ep04",
+    "model": "mlx-community/Qwen3.5-4B-4bit",
+    "adapter": "adapters/ep04-qwen3.5-4b",
+    "docs": "v1",
+    "n_alerts": 24,
+    "timestamp": "2026-09-14T08:17:54.819661+00:00"
+  },
+  "results": {
+    "base": {
+      "summary": {
+        "config": "base",
+        "n": 24,
+        "compliance_rate": 1.0,
+        "fact_accuracy": 0.3333333333333333,
+        "severity_accuracy": 0.7083333333333334,
+        "mean_ttft_s": 0.132,
+        "mean_decode_tps": 167.6
+      },
+      "runs": [
+        {
+          "alert": "[FIRING] checkout-svc p99 latency 9101ms (threshold 800ms), db_pool_wait_ms=1900, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Database connection pool exhaustion or high query latency in us-west-2 region\",\n  \"runbook_ref\": \"RUNBOOK-DB-POOL-LATENCY\",\n  \"escalate_to\": \"platform-lead\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": false,
+          "ttft_s": 0.147,
+          "decode_tps": 168.0
+        },
+        {
+          "alert": "[FIRING] checkout-svc 5xx rate 9202% on /cart/confirm, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Database connection pool exhaustion or downstream payment gateway timeout causing request failures\",\n  \"runbook_ref\": \"RUNBOOK-CHK-5XX-OUTAGE\",\n  \"escalate_to\": \"SRE-OnCall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.132,
+          "decode_tps": 167.2
+        },
+        {
+          "alert": "[WARNING] checkout-svc db_pool_wait_ms=9303 trending up over 15m, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Database connection pool exhaustion or high latency due to heavy load in us-west-2\",\n  \"runbook_ref\": \"RUNBOOK-DB-POOL-LATENCY\",\n  \"escalate_to\": \"oncall-lead\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.136,
+          "decode_tps": 167.4
+        },
+        {
+          "alert": "[INFO] checkout-svc pool utilisation 9404% during scheduled load test, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Scheduled load test causing temporary resource exhaustion\",\n  \"runbook_ref\": \"RUNBOOK-LOAD-TEST-PROCEDURE\",\n  \"escalate_to\": \"platform-team-lead\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": false,
+          "ttft_s": 0.13,
+          "decode_tps": 165.7
+        },
+        {
+          "alert": "[FIRING] payments-gw psp_timeout_rate 9101% (threshold 5%), retry_queue_depth=12000, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"payments-gw\",\n  \"probable_cause\": \"Backend processing latency or upstream PSP provider degradation causing excessive timeouts, leading to queue saturation\",\n  \"runbook_ref\": \"RUNBOOK-PAYMENTS-GW-TIMEOUT-SPILL\",\n  \"escalate_to\": \"payments-platform-lead\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.131,
+          "decode_tps": 167.4
+        },
+        {
+          "alert": "[FIRING] payments-gw duplicate_authorization_warnings=9202 in 5m, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"payments-gw\",\n  \"probable_cause\": \"Idempotency key collision or race condition during high-volume transaction processing causing duplicate authorization records\",\n  \"runbook_ref\": \"RUNBOOK-PAYMENTS-DUPLICATE-AUTH\",\n  \"escalate_to\": \"payments-platform-lead\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": false,
+          "ttft_s": 0.129,
+          "decode_tps": 168.1
+        },
+        {
+          "alert": "[WARNING] payments-gw retry_queue_depth=9303 growing, psp latency elevated, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"payments-gw\",\n  \"probable_cause\": \"High retry queue depth indicating processing backlog, likely due to elevated PSP latency causing request timeouts or failures.\",\n  \"runbook_ref\": \"RUNBOOK-PAYMENTS-GW-RETRY-QUEUE\",\n  \"escalate_to\": \"payments-platform-lead\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.131,
+          "decode_tps": 168.2
+        },
+        {
+          "alert": "[INFO] payments-gw psp_timeout_rate 9404% brief blip, auto-recovered, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\n  \"severity\": \"P3\",\n  \"affected_service\": \"payments-gw\",\n  \"probable_cause\": \"Transient network latency or temporary gateway provider unavailability\",\n  \"runbook_ref\": \"RUNBOOK-PAYMENTS-TIMEOUT-RECOVERY\",\n  \"escalate_to\": \"payments-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.131,
+          "decode_tps": 168.1
+        },
+        {
+          "alert": "[FIRING] inventory-svc stock_mismatch_count=9101 after bulk import job, oversell alerts firing, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"inventory-svc\",\n  \"probable_cause\": \"Bulk import job processed stale or incorrect inventory data, causing the stock_mismatch_count threshold to be exceeded and triggering oversell alerts.\",\n  \"runbook_ref\": \"RUNBOOK-INV-001\",\n  \"escalate_to\": \"platform-lead\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.13,
+          "decode_tps": 167.9
+        },
+        {
+          "alert": "[WARNING] inventory-svc cache_hit_ratio dropped to 9202% post-import, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"inventory-svc\",\n  \"probable_cause\": \"Cache hit ratio metric value is mathematically impossible (9202%), indicating a data ingestion error, corrupted metric stream, or a configuration bug in the monitoring aggregator rather than a genuine system state.\",\n  \"runbook_ref\": \"RUNBOOK-MONITORING-ANOMALY-001\",\n  \"escalate_to\": \"platform-reliability-team\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": false,
+          "ttft_s": 0.131,
+          "decode_tps": 167.8
+        },
+        {
+          "alert": "[WARNING] inventory-svc oversell_alerts=9303 in 10m, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"inventory-svc\",\n  \"probable_cause\": \"Inventory service generating excessive oversell alerts due to high demand or configuration drift in us-west-2 region\",\n  \"runbook_ref\": \"RUNBOOK-INV-001\",\n  \"escalate_to\": \"platform-lead\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.131,
+          "decode_tps": 167.4
+        },
+        {
+          "alert": "[INFO] inventory-svc stock_mismatch_count=9404, within tolerance, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\"severity\": \"P3\", \"affected_service\": \"inventory-svc\", \"probable_cause\": \"Normal operational variance within defined tolerance limits\", \"runbook_ref\": \"RUNBOOK-INV-001\", \"escalate_to\": \"on-call-engineer\", \"escalate\": false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.13,
+          "decode_tps": 167.6
+        },
+        {
+          "alert": "[FIRING] search-svc query p95 9101ms (threshold 1500ms), indexer CPU 100%, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"search-svc\",\n  \"probable_cause\": \"Indexer resource saturation causing query latency degradation\",\n  \"runbook_ref\": \"RUNBOOK-SEARCH-LATENCY\",\n  \"escalate_to\": \"platform-lead\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": false,
+          "ttft_s": 0.134,
+          "decode_tps": 167.8
+        },
+        {
+          "alert": "[WARNING] search-svc timeouts on category pages 9202/min during index rebuild, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"search-svc\",\n  \"probable_cause\": \"High latency or resource contention during index rebuild causing request timeouts\",\n  \"runbook_ref\": \"RUNBOOK-SEARCH-INDEX-REBUILD\",\n  \"escalate_to\": \"platform-reliability\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.13,
+          "decode_tps": 167.5
+        },
+        {
+          "alert": "[WARNING] search-svc indexer CPU 9303% for 20m, query latency rising, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"search-svc\",\n  \"probable_cause\": \"Indexer resource exhaustion due to high CPU utilization (93%) and increased query load in us-west-2 region\",\n  \"runbook_ref\": \"RUNBOOK-SEARCH-INDEXER-CPU-THROTTLE\",\n  \"escalate_to\": \"platform-ops\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.131,
+          "decode_tps": 167.9
+        },
+        {
+          "alert": "[INFO] search-svc scheduled index rebuild running, p95 9404ms, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\n  \"severity\": \"P3\",\n  \"affected_service\": \"search-svc\",\n  \"probable_cause\": \"Planned scheduled index rebuild causing temporary latency spike\",\n  \"runbook_ref\": \"RUNBOOK-SEARCH-INDEX-REBUILD\",\n  \"escalate_to\": \"platform-team\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.131,
+          "decode_tps": 167.8
+        },
+        {
+          "alert": "[FIRING] notify-svc email_queue_depth=9101 (threshold 50000), vendor returning 429, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"notify-svc\",\n  \"probable_cause\": \"Rate limit exceeded (429) due to high email queue depth\",\n  \"runbook_ref\": \"RUNBOOK-NOTIFY-QUEUE-THROTTLE\",\n  \"escalate_to\": \"platform-team-lead\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": false,
+          "ttft_s": 0.131,
+          "decode_tps": 167.8
+        },
+        {
+          "alert": "[WARNING] notify-svc notification latency 9202min, vendor rate-limiting, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"notify-svc\",\n  \"probable_cause\": \"Vendor rate-limiting causing notification latency\",\n  \"runbook_ref\": \"RUNBOOK-NOTIFY-LATENCY\",\n  \"escalate_to\": \"platform-team\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.131,
+          "decode_tps": 167.3
+        },
+        {
+          "alert": "[WARNING] notify-svc vendor 429 responses 9303/min, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"notify-svc\",\n  \"probable_cause\": \"High response rate (9303/min) indicates a traffic spike or potential misconfiguration in the vendor integration, though the warning level suggests it is within acceptable thresholds.\",\n  \"runbook_ref\": \"RUNBOOK-NOTIFY-TRAFFIC-SPIKE\",\n  \"escalate_to\": \"platform-ops\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.13,
+          "decode_tps": 167.0
+        },
+        {
+          "alert": "[INFO] notify-svc email_queue_depth=9404, draining normally, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\n  \"severity\": \"P3\",\n  \"affected_service\": \"notify-svc\",\n  \"probable_cause\": \"High email queue depth (9404) with active draining, likely a temporary backlog or temporary capacity constraint\",\n  \"runbook_ref\": \"RUNBOOK-NOTIFY-QUEUE-MANAGEMENT\",\n  \"escalate_to\": \"platform-ops\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.13,
+          "decode_tps": 167.8
+        },
+        {
+          "alert": "[FIRING] auth-svc token_verify_fail_rate 9101% (threshold 2%), JWKS fetch errors, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"auth-svc\",\n  \"probable_cause\": \"JWKS endpoint unavailability or network failure in us-west-2 region causing token verification to fail\",\n  \"runbook_ref\": \"RUNBOOK-AUTH-TOKEN-VERIFICATION-Failure\",\n  \"escalate_to\": \"on-call-lead-auth\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.13,
+          "decode_tps": 167.2
+        },
+        {
+          "alert": "[FIRING] auth-svc 401 rate 9202% across all clients, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"auth-svc\",\n  \"probable_cause\": \"Authentication service misconfiguration or credential rotation failure causing widespread 401 errors\",\n  \"runbook_ref\": \"RUNBOOK-AUTH-001\",\n  \"escalate_to\": \"platform-security-team\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.13,
+          "decode_tps": 167.7
+        },
+        {
+          "alert": "[WARNING] auth-svc signing key expires in 9303h, rotation not scheduled, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\n  \"severity\": \"P3\",\n  \"affected_service\": \"auth-svc\",\n  \"probable_cause\": \"Signing key rotation policy or monitoring threshold misconfiguration\",\n  \"runbook_ref\": \"RUNBOOK-AUTH-KEY-ROTATION\",\n  \"escalate_to\": \"security-team\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": false,
+          "ttft_s": 0.13,
+          "decode_tps": 167.4
+        },
+        {
+          "alert": "[INFO] auth-svc JWKS cache refresh took 9404ms, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\n  \"severity\": \"P3\",\n  \"affected_service\": \"auth-svc\",\n  \"probable_cause\": \"JWKS cache refresh latency spike due to network latency or upstream provider delay\",\n  \"runbook_ref\": \"RUNBOOK-AUTH-SVC-004\",\n  \"escalate_to\": \"platform-team\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.13,
+          "decode_tps": 167.7
+        }
+      ]
+    },
+    "base_rag": {
+      "summary": {
+        "config": "base_rag",
+        "n": 24,
+        "compliance_rate": 1.0,
+        "fact_accuracy": 0.9166666666666666,
+        "severity_accuracy": 0.75,
+        "mean_ttft_s": 0.15,
+        "mean_decode_tps": 167.0
+      },
+      "runs": [
+        {
+          "alert": "[FIRING] checkout-svc p99 latency 9101ms (threshold 800ms), db_pool_wait_ms=1900, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Database pool exhaustion causing high wait times and cascading latency spikes\",\n  \"runbook_ref\": \"RB-CHK-001\",\n  \"escalate_to\": \"#atlas-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.148,
+          "decode_tps": 167.0
+        },
+        {
+          "alert": "[FIRING] checkout-svc 5xx rate 9202% on /cart/confirm, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Database pool exhaustion or connection leak causing high wait times, resulting in 5xx errors on /cart/confirm\",\n  \"runbook_ref\": \"RB-CHK-001\",\n  \"escalate_to\": \"#atlas-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.15,
+          "decode_tps": 166.8
+        },
+        {
+          "alert": "[WARNING] checkout-svc db_pool_wait_ms=9303 trending up over 15m, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Database connection pool exhaustion or high latency in us-west-2 region causing elevated wait times\",\n  \"runbook_ref\": \"RB-CHK-001\",\n  \"escalate_to\": \"team-atlas\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": false,
+            "facts_correct": 2
+          },
+          "severity_match": true,
+          "ttft_s": 0.15,
+          "decode_tps": 165.9
+        },
+        {
+          "alert": "[INFO] checkout-svc pool utilisation 9404% during scheduled load test, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"DB connection-pool exhaustion\",\n  \"runbook_ref\": \"RB-CHK-001\",\n  \"escalate_to\": \"#atlas-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.148,
+          "decode_tps": 166.7
+        },
+        {
+          "alert": "[FIRING] payments-gw psp_timeout_rate 9101% (threshold 5%), retry_queue_depth=12000, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"payments-gw\",\n  \"probable_cause\": \"Gateway timeout saturation causing queue backlog and duplicate auth warnings\",\n  \"runbook_ref\": \"RB-PAY-001\",\n  \"escalate_to\": \"#ledger-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.149,
+          "decode_tps": 167.2
+        },
+        {
+          "alert": "[FIRING] payments-gw duplicate_authorization_warnings=9202 in 5m, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"payments-gw\",\n  \"probable_cause\": \"High volume of duplicate authorization requests in us-west-2 region, likely due to retry storms or idempotency key collisions\",\n  \"runbook_ref\": \"RB-PAY-001\",\n  \"escalate_to\": \"#ledger-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.151,
+          "decode_tps": 167.2
+        },
+        {
+          "alert": "[WARNING] payments-gw retry_queue_depth=9303 growing, psp latency elevated, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"payments-gw\",\n  \"probable_cause\": \"Retry queue backlog due to elevated PSP latency in us-west-2 region\",\n  \"runbook_ref\": \"runbook-payments-gw.md\",\n  \"escalate_to\": \"#ledger-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": true,
+            "facts_correct": 2
+          },
+          "severity_match": true,
+          "ttft_s": 0.149,
+          "decode_tps": 167.1
+        },
+        {
+          "alert": "[INFO] payments-gw psp_timeout_rate 9404% brief blip, auto-recovered, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\n  \"severity\": \"P3\",\n  \"affected_service\": \"payments-gw\",\n  \"probable_cause\": \"Transient network latency or temporary gateway overload causing high timeout rate\",\n  \"runbook_ref\": \"RB-PAY-001\",\n  \"escalate_to\": \"#ledger-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.149,
+          "decode_tps": 167.5
+        },
+        {
+          "alert": "[FIRING] inventory-svc stock_mismatch_count=9101 after bulk import job, oversell alerts firing, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"inventory-svc\",\n  \"probable_cause\": \"Cache/DB drift after bulk import job\",\n  \"runbook_ref\": \"runbook-inventory-svc.md\",\n  \"escalate_to\": \"platform-lead\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.15,
+          "decode_tps": 167.1
+        },
+        {
+          "alert": "[WARNING] inventory-svc cache_hit_ratio dropped to 9202% post-import, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"inventory-svc\",\n  \"probable_cause\": \"Cache hit ratio anomaly likely due to data import load or cache eviction storm in us-west-2 region\",\n  \"runbook_ref\": \"RB-INV-001\",\n  \"escalate_to\": \"#stockroom-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.15,
+          "decode_tps": 167.0
+        },
+        {
+          "alert": "[WARNING] inventory-svc oversell_alerts=9303 in 10m, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"inventory-svc\",\n  \"probable_cause\": \"Inventory overselling due to high request volume in us-west-2 region\",\n  \"runbook_ref\": \"RB-INV-001\",\n  \"escalate_to\": \"#stockroom-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.151,
+          "decode_tps": 167.0
+        },
+        {
+          "alert": "[INFO] inventory-svc stock_mismatch_count=9404, within tolerance, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\n  \"severity\": \"P3\",\n  \"affected_service\": \"inventory-svc\",\n  \"probable_cause\": \"Normal operational fluctuation within tolerance\",\n  \"runbook_ref\": \"RB-INV-001\",\n  \"escalate_to\": \"#stockroom-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.149,
+          "decode_tps": 167.1
+        },
+        {
+          "alert": "[FIRING] search-svc query p95 9101ms (threshold 1500ms), indexer CPU 100%, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"search-svc\",\n  \"probable_cause\": \"Index rebuild starving query latency\",\n  \"runbook_ref\": \"RB-SRCH-001\",\n  \"escalate_to\": \"#lens-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.153,
+          "decode_tps": 166.6
+        },
+        {
+          "alert": "[WARNING] search-svc timeouts on category pages 9202/min during index rebuild, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"search-svc\",\n  \"probable_cause\": \"Index rebuild starving query latency\",\n  \"runbook_ref\": \"RB-SRCH-001\",\n  \"escalate_to\": \"#lens-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.149,
+          "decode_tps": 166.9
+        },
+        {
+          "alert": "[WARNING] search-svc indexer CPU 9303% for 20m, query latency rising, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"search-svc\",\n  \"probable_cause\": \"Index rebuild starving query latency\",\n  \"runbook_ref\": \"runbook-search-svc.md\",\n  \"escalate_to\": \"platform-lead\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": false,
+            "facts_correct": 1
+          },
+          "severity_match": true,
+          "ttft_s": 0.148,
+          "decode_tps": 167.5
+        },
+        {
+          "alert": "[INFO] search-svc scheduled index rebuild running, p95 9404ms, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"search-svc\",\n  \"probable_cause\": \"Index rebuild causing query latency spike\",\n  \"runbook_ref\": \"RB-SRCH-001\",\n  \"escalate_to\": \"#lens-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.148,
+          "decode_tps": 167.1
+        },
+        {
+          "alert": "[FIRING] notify-svc email_queue_depth=9101 (threshold 50000), vendor returning 429, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"notify-svc\",\n  \"probable_cause\": \"Email queue backlog exceeding threshold combined with vendor rate limiting (429 responses)\",\n  \"runbook_ref\": \"RB-NTF-001\",\n  \"escalate_to\": \"#beacon-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.158,
+          "decode_tps": 167.0
+        },
+        {
+          "alert": "[WARNING] notify-svc notification latency 9202min, vendor rate-limiting, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"notify-svc\",\n  \"probable_cause\": \"Vendor rate-limiting (429 responses) combined with high notification latency\",\n  \"runbook_ref\": \"RB-NTF-001\",\n  \"escalate_to\": \"#beacon-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.152,
+          "decode_tps": 167.2
+        },
+        {
+          "alert": "[WARNING] notify-svc vendor 429 responses 9303/min, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"notify-svc\",\n  \"probable_cause\": \"Vendor API rate limiting (429 responses) causing email queue backlog\",\n  \"runbook_ref\": \"RB-NTF-001\",\n  \"escalate_to\": \"#beacon-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.15,
+          "decode_tps": 167.1
+        },
+        {
+          "alert": "[INFO] notify-svc email_queue_depth=9404, draining normally, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"notify-svc\",\n  \"probable_cause\": \"email_queue_depth elevated (9404) approaching threshold of 50k\",\n  \"runbook_ref\": \"RB-NTF-001\",\n  \"escalate_to\": \"#beacon-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.149,
+          "decode_tps": 167.2
+        },
+        {
+          "alert": "[FIRING] auth-svc token_verify_fail_rate 9101% (threshold 2%), JWKS fetch errors, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"auth-svc\",\n  \"probable_cause\": \"JWKS fetch errors causing token verification failures\",\n  \"runbook_ref\": \"RB-AUTH-001\",\n  \"escalate_to\": \"#gate-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.15,
+          "decode_tps": 167.2
+        },
+        {
+          "alert": "[FIRING] auth-svc 401 rate 9202% across all clients, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"auth-svc\",\n  \"probable_cause\": \"Token verification failure due to JWKS fetch errors or invalid token configuration\",\n  \"runbook_ref\": \"RB-AUTH-001\",\n  \"escalate_to\": \"#gate-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.149,
+          "decode_tps": 167.0
+        },
+        {
+          "alert": "[WARNING] auth-svc signing key expires in 9303h, rotation not scheduled, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"auth-svc\",\n  \"probable_cause\": \"Token-signing key rotation missed; key expiration window extended beyond normal grace period\",\n  \"runbook_ref\": \"RB-AUTH-001\",\n  \"escalate_to\": \"#gate-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.15,
+          "decode_tps": 167.4
+        },
+        {
+          "alert": "[INFO] auth-svc JWKS cache refresh took 9404ms, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"auth-svc\",\n  \"probable_cause\": \"JWKS cache refresh latency spike\",\n  \"runbook_ref\": \"RB-AUTH-001\",\n  \"escalate_to\": \"#gate-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.149,
+          "decode_tps": 166.9
+        }
+      ]
+    },
+    "tuned": {
+      "summary": {
+        "config": "tuned",
+        "n": 24,
+        "compliance_rate": 1.0,
+        "fact_accuracy": 1.0,
+        "severity_accuracy": 1.0,
+        "mean_ttft_s": 0.16,
+        "mean_decode_tps": 90.9
+      },
+      "runs": [
+        {
+          "alert": "[FIRING] checkout-svc p99 latency 9101ms (threshold 800ms), db_pool_wait_ms=1900, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.169,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[FIRING] checkout-svc 5xx rate 9202% on /cart/confirm, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.154,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[WARNING] checkout-svc db_pool_wait_ms=9303 trending up over 15m, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.154,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[INFO] checkout-svc pool utilisation 9404% during scheduled load test, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.152,
+          "decode_tps": 92.2
+        },
+        {
+          "alert": "[FIRING] payments-gw psp_timeout_rate 9101% (threshold 5%), retry_queue_depth=12000, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"payments-gw\",\"probable_cause\":\"upstream psp timeout causing retry storm\",\"runbook_ref\":\"RB-PAY-001\",\"escalate_to\":\"#ledger-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.154,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[FIRING] payments-gw duplicate_authorization_warnings=9202 in 5m, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"payments-gw\",\"probable_cause\":\"upstream psp timeout causing retry storm\",\"runbook_ref\":\"RB-PAY-001\",\"escalate_to\":\"#ledger-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.153,
+          "decode_tps": 92.2
+        },
+        {
+          "alert": "[WARNING] payments-gw retry_queue_depth=9303 growing, psp latency elevated, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"payments-gw\",\"probable_cause\":\"upstream psp timeout causing retry storm\",\"runbook_ref\":\"RB-PAY-001\",\"escalate_to\":\"#ledger-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.152,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[INFO] payments-gw psp_timeout_rate 9404% brief blip, auto-recovered, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"payments-gw\",\"probable_cause\":\"upstream psp timeout causing retry storm\",\"runbook_ref\":\"RB-PAY-001\",\"escalate_to\":\"#ledger-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.153,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[FIRING] inventory-svc stock_mismatch_count=9101 after bulk import job, oversell alerts firing, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"inventory-svc\",\"probable_cause\":\"cache/db drift after bulk import\",\"runbook_ref\":\"RB-INV-001\",\"escalate_to\":\"#stockroom-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.154,
+          "decode_tps": 60.4
+        },
+        {
+          "alert": "[WARNING] inventory-svc cache_hit_ratio dropped to 9202% post-import, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"inventory-svc\",\"probable_cause\":\"cache/db drift after bulk import\",\"runbook_ref\":\"RB-INV-001\",\"escalate_to\":\"#stockroom-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.251,
+          "decode_tps": 90.4
+        },
+        {
+          "alert": "[WARNING] inventory-svc oversell_alerts=9303 in 10m, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"inventory-svc\",\"probable_cause\":\"cache/db drift after bulk import\",\"runbook_ref\":\"RB-INV-001\",\"escalate_to\":\"#stockroom-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.156,
+          "decode_tps": 92.2
+        },
+        {
+          "alert": "[INFO] inventory-svc stock_mismatch_count=9404, within tolerance, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"inventory-svc\",\"probable_cause\":\"cache/db drift after bulk import\",\"runbook_ref\":\"RB-INV-001\",\"escalate_to\":\"#stockroom-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.162,
+          "decode_tps": 92.0
+        },
+        {
+          "alert": "[FIRING] search-svc query p95 9101ms (threshold 1500ms), indexer CPU 100%, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"search-svc\",\"probable_cause\":\"index rebuild starving query latency\",\"runbook_ref\":\"RB-SRCH-001\",\"escalate_to\":\"#lens-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.154,
+          "decode_tps": 91.9
+        },
+        {
+          "alert": "[WARNING] search-svc timeouts on category pages 9202/min during index rebuild, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"search-svc\",\"probable_cause\":\"index rebuild starving query latency\",\"runbook_ref\":\"RB-SRCH-001\",\"escalate_to\":\"#lens-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.164,
+          "decode_tps": 91.9
+        },
+        {
+          "alert": "[WARNING] search-svc indexer CPU 9303% for 20m, query latency rising, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"search-svc\",\"probable_cause\":\"index rebuild starving query latency\",\"runbook_ref\":\"RB-SRCH-001\",\"escalate_to\":\"#lens-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.159,
+          "decode_tps": 92.4
+        },
+        {
+          "alert": "[INFO] search-svc scheduled index rebuild running, p95 9404ms, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"search-svc\",\"probable_cause\":\"index rebuild starving query latency\",\"runbook_ref\":\"RB-SRCH-001\",\"escalate_to\":\"#lens-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.153,
+          "decode_tps": 92.4
+        },
+        {
+          "alert": "[FIRING] notify-svc email_queue_depth=9101 (threshold 50000), vendor returning 429, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"notify-svc\",\"probable_cause\":\"queue backlog when email vendor rate-limits\",\"runbook_ref\":\"RB-NTF-001\",\"escalate_to\":\"#beacon-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.156,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[WARNING] notify-svc notification latency 9202min, vendor rate-limiting, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"notify-svc\",\"probable_cause\":\"queue backlog when email vendor rate-limits\",\"runbook_ref\":\"RB-NTF-001\",\"escalate_to\":\"#beacon-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.153,
+          "decode_tps": 92.4
+        },
+        {
+          "alert": "[WARNING] notify-svc vendor 429 responses 9303/min, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"notify-svc\",\"probable_cause\":\"queue backlog when email vendor rate-limits\",\"runbook_ref\":\"RB-NTF-001\",\"escalate_to\":\"#beacon-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.153,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[INFO] notify-svc email_queue_depth=9404, draining normally, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"notify-svc\",\"probable_cause\":\"queue backlog when email vendor rate-limits\",\"runbook_ref\":\"RB-NTF-001\",\"escalate_to\":\"#beacon-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.153,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[FIRING] auth-svc token_verify_fail_rate 9101% (threshold 2%), JWKS fetch errors, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"auth-svc\",\"probable_cause\":\"token-signing key rotation missed\",\"runbook_ref\":\"RB-AUTH-001\",\"escalate_to\":\"#gate-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.155,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[FIRING] auth-svc 401 rate 9202% across all clients, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"auth-svc\",\"probable_cause\":\"token-signing key rotation missed\",\"runbook_ref\":\"RB-AUTH-001\",\"escalate_to\":\"#gate-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.154,
+          "decode_tps": 92.4
+        },
+        {
+          "alert": "[WARNING] auth-svc signing key expires in 9303h, rotation not scheduled, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"auth-svc\",\"probable_cause\":\"token-signing key rotation missed\",\"runbook_ref\":\"RB-AUTH-001\",\"escalate_to\":\"#gate-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.16,
+          "decode_tps": 92.3
+        },
+        {
+          "alert": "[INFO] auth-svc JWKS cache refresh took 9404ms, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"auth-svc\",\"probable_cause\":\"token-signing key rotation missed\",\"runbook_ref\":\"RB-AUTH-001\",\"escalate_to\":\"#gate-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.154,
+          "decode_tps": 92.3
+        }
+      ]
+    },
+    "tuned_rag": {
+      "summary": {
+        "config": "tuned_rag",
+        "n": 24,
+        "compliance_rate": 1.0,
+        "fact_accuracy": 0.9722222222222222,
+        "severity_accuracy": 0.875,
+        "mean_ttft_s": 0.178,
+        "mean_decode_tps": 92.1
+      },
+      "runs": [
+        {
+          "alert": "[FIRING] checkout-svc p99 latency 9101ms (threshold 800ms), db_pool_wait_ms=1900, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.176,
+          "decode_tps": 92.2
+        },
+        {
+          "alert": "[FIRING] checkout-svc 5xx rate 9202% on /cart/confirm, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.178,
+          "decode_tps": 92.1
+        },
+        {
+          "alert": "[WARNING] checkout-svc db_pool_wait_ms=9303 trending up over 15m, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.179,
+          "decode_tps": 92.2
+        },
+        {
+          "alert": "[INFO] checkout-svc pool utilisation 9404% during scheduled load test, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#atlas-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.174,
+          "decode_tps": 92.2
+        },
+        {
+          "alert": "[FIRING] payments-gw psp_timeout_rate 9101% (threshold 5%), retry_queue_depth=12000, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"payments-gw\",\"probable_cause\":\"upstream psp timeout causing retry storm\",\"runbook_ref\":\"RB-PAY-001\",\"escalate_to\":\"#ledger-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.176,
+          "decode_tps": 92.2
+        },
+        {
+          "alert": "[FIRING] payments-gw duplicate_authorization_warnings=9202 in 5m, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"payments-gw\",\"probable_cause\":\"upstream psp timeout causing retry storm\",\"runbook_ref\":\"RB-PAY-001\",\"escalate_to\":\"#ledger-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.178,
+          "decode_tps": 92.1
+        },
+        {
+          "alert": "[WARNING] payments-gw retry_queue_depth=9303 growing, psp latency elevated, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"payments-gw\",\"probable_cause\":\"upstream psp timeout causing retry storm\",\"runbook_ref\":\"RB-PAY-001\",\"escalate_to\":\"#ledger-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.176,
+          "decode_tps": 92.1
+        },
+        {
+          "alert": "[INFO] payments-gw psp_timeout_rate 9404% brief blip, auto-recovered, region=us-west-2",
+          "service": "payments-gw",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"payments-gw\",\"probable_cause\":\"upstream psp timeout causing retry storm\",\"runbook_ref\":\"RB-PAY-001\",\"escalate_to\":\"#ledger-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "payments-gw",
+            "probable_cause": "upstream psp timeout causing retry storm",
+            "runbook_ref": "RB-PAY-001",
+            "escalate_to": "#ledger-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.176,
+          "decode_tps": 92.1
+        },
+        {
+          "alert": "[FIRING] inventory-svc stock_mismatch_count=9101 after bulk import job, oversell alerts firing, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"inventory-svc\",\"probable_cause\":\"cache/db drift after bulk import\",\"runbook_ref\":\"runbook-inventory-svc.md\",\"escalate_to\":\"#stockroom-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": true,
+            "facts_correct": 2
+          },
+          "severity_match": true,
+          "ttft_s": 0.175,
+          "decode_tps": 92.1
+        },
+        {
+          "alert": "[WARNING] inventory-svc cache_hit_ratio dropped to 9202% post-import, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"inventory-svc\",\"probable_cause\":\"cache/db drift after bulk import\",\"runbook_ref\":\"RB-INV-001\",\"escalate_to\":\"#stockroom-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.18,
+          "decode_tps": 92.0
+        },
+        {
+          "alert": "[WARNING] inventory-svc oversell_alerts=9303 in 10m, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"inventory-svc\",\"probable_cause\":\"cache/db drift after bulk import\",\"runbook_ref\":\"RB-INV-001\",\"escalate_to\":\"#stockroom-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.178,
+          "decode_tps": 92.1
+        },
+        {
+          "alert": "[INFO] inventory-svc stock_mismatch_count=9404, within tolerance, region=us-west-2",
+          "service": "inventory-svc",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"inventory-svc\",\"probable_cause\":\"cache/db drift after bulk import\",\"runbook_ref\":\"RB-INV-001\",\"escalate_to\":\"#stockroom-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "inventory-svc",
+            "probable_cause": "cache/db drift after bulk import",
+            "runbook_ref": "RB-INV-001",
+            "escalate_to": "#stockroom-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.175,
+          "decode_tps": 92.0
+        },
+        {
+          "alert": "[FIRING] search-svc query p95 9101ms (threshold 1500ms), indexer CPU 100%, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"search-svc\",\"probable_cause\":\"index rebuild starving query latency\",\"runbook_ref\":\"RB-SRCH-001\",\"escalate_to\":\"#lens-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.176,
+          "decode_tps": 91.8
+        },
+        {
+          "alert": "[WARNING] search-svc timeouts on category pages 9202/min during index rebuild, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"search-svc\",\"probable_cause\":\"index rebuild starving query latency\",\"runbook_ref\":\"RB-SRCH-001\",\"escalate_to\":\"#lens-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.177,
+          "decode_tps": 92.1
+        },
+        {
+          "alert": "[WARNING] search-svc indexer CPU 9303% for 20m, query latency rising, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"search-svc\",\"probable_cause\":\"index rebuild starving query latency\",\"runbook_ref\":\"runbook-search-svc.md\",\"escalate_to\":\"#lens-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": false,
+            "escalate_to": true,
+            "facts_correct": 2
+          },
+          "severity_match": true,
+          "ttft_s": 0.174,
+          "decode_tps": 92.0
+        },
+        {
+          "alert": "[INFO] search-svc scheduled index rebuild running, p95 9404ms, region=us-west-2",
+          "service": "search-svc",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"search-svc\",\"probable_cause\":\"index rebuild starving query latency\",\"runbook_ref\":\"RB-SRCH-001\",\"escalate_to\":\"#lens-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "search-svc",
+            "probable_cause": "index rebuild starving query latency",
+            "runbook_ref": "RB-SRCH-001",
+            "escalate_to": "#lens-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.176,
+          "decode_tps": 92.1
+        },
+        {
+          "alert": "[FIRING] notify-svc email_queue_depth=9101 (threshold 50000), vendor returning 429, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"notify-svc\",\"probable_cause\":\"queue backlog when email vendor rate-limits\",\"runbook_ref\":\"RB-NTF-001\",\"escalate_to\":\"#beacon-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.187,
+          "decode_tps": 92.0
+        },
+        {
+          "alert": "[WARNING] notify-svc notification latency 9202min, vendor rate-limiting, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"notify-svc\",\"probable_cause\":\"queue backlog when email vendor rate-limits\",\"runbook_ref\":\"RB-NTF-001\",\"escalate_to\":\"#beacon-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.18,
+          "decode_tps": 92.1
+        },
+        {
+          "alert": "[WARNING] notify-svc vendor 429 responses 9303/min, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"notify-svc\",\"probable_cause\":\"queue backlog when email vendor rate-limits\",\"runbook_ref\":\"RB-NTF-001\",\"escalate_to\":\"#beacon-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.184,
+          "decode_tps": 92.0
+        },
+        {
+          "alert": "[INFO] notify-svc email_queue_depth=9404, draining normally, region=us-west-2",
+          "service": "notify-svc",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"notify-svc\",\"probable_cause\":\"queue backlog when email vendor rate-limits\",\"runbook_ref\":\"RB-NTF-001\",\"escalate_to\":\"#beacon-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "notify-svc",
+            "probable_cause": "queue backlog when email vendor rate-limits",
+            "runbook_ref": "RB-NTF-001",
+            "escalate_to": "#beacon-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.18,
+          "decode_tps": 92.0
+        },
+        {
+          "alert": "[FIRING] auth-svc token_verify_fail_rate 9101% (threshold 2%), JWKS fetch errors, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"auth-svc\",\"probable_cause\":\"token-signing key rotation missed\",\"runbook_ref\":\"RB-AUTH-001\",\"escalate_to\":\"#gate-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.179,
+          "decode_tps": 92.0
+        },
+        {
+          "alert": "[FIRING] auth-svc 401 rate 9202% across all clients, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"auth-svc\",\"probable_cause\":\"token-signing key rotation missed\",\"runbook_ref\":\"RB-AUTH-001\",\"escalate_to\":\"#gate-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.182,
+          "decode_tps": 91.9
+        },
+        {
+          "alert": "[WARNING] auth-svc signing key expires in 9303h, rotation not scheduled, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"auth-svc\",\"probable_cause\":\"token-signing key rotation missed\",\"runbook_ref\":\"RB-AUTH-001\",\"escalate_to\":\"#gate-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.179,
+          "decode_tps": 92.0
+        },
+        {
+          "alert": "[INFO] auth-svc JWKS cache refresh took 9404ms, region=us-west-2",
+          "service": "auth-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"auth-svc\",\"probable_cause\":\"token-signing key rotation missed\",\"runbook_ref\":\"RB-AUTH-001\",\"escalate_to\":\"#gate-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "auth-svc",
+            "probable_cause": "token-signing key rotation missed",
+            "runbook_ref": "RB-AUTH-001",
+            "escalate_to": "#gate-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.179,
+          "decode_tps": 92.0
+        }
+      ]
+    }
+  }
+}

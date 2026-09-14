@@ -1,0 +1,411 @@
+{
+  "meta": {
+    "episode": "ep04",
+    "model": "mlx-community/Qwen3.5-4B-4bit",
+    "adapter": "adapters/ep04-qwen3.5-4b",
+    "docs": "v2",
+    "n_alerts": 4,
+    "timestamp": "2026-09-14T08:18:06.922564+00:00"
+  },
+  "results": {
+    "base_rag": {
+      "summary": {
+        "config": "base_rag",
+        "n": 4,
+        "compliance_rate": 1.0,
+        "fact_accuracy": 1.0,
+        "severity_accuracy": 0.75,
+        "mean_ttft_s": 0.195,
+        "mean_decode_tps": 166.5
+      },
+      "runs": [
+        {
+          "alert": "[FIRING] checkout-svc p99 latency 9101ms (threshold 800ms), db_pool_wait_ms=1900, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Database pool exhaustion causing high wait times\",\n  \"runbook_ref\": \"RB-CHK-001\",\n  \"escalate_to\": \"#borealis-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.172,
+          "decode_tps": 166.6
+        },
+        {
+          "alert": "[FIRING] checkout-svc 5xx rate 9202% on /cart/confirm, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Database pool exhaustion or connection leak causing high wait times, resulting in 5xx errors on /cart/confirm\",\n  \"runbook_ref\": \"RB-CHK-001\",\n  \"escalate_to\": \"#borealis-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.159,
+          "decode_tps": 166.2
+        },
+        {
+          "alert": "[WARNING] checkout-svc db_pool_wait_ms=9303 trending up over 15m, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P2\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"Database connection pool exhaustion or high latency in us-west-2 region causing elevated wait times\",\n  \"runbook_ref\": \"RB-CHK-001\",\n  \"escalate_to\": \"#borealis-oncall\",\n  \"escalate\": false\n}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.292,
+          "decode_tps": 166.8
+        },
+        {
+          "alert": "[INFO] checkout-svc pool utilisation 9404% during scheduled load test, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\n  \"severity\": \"P1\",\n  \"affected_service\": \"checkout-svc\",\n  \"probable_cause\": \"DB connection-pool exhaustion\",\n  \"runbook_ref\": \"RB-CHK-001\",\n  \"escalate_to\": \"#borealis-oncall\",\n  \"escalate\": true\n}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.155,
+          "decode_tps": 166.5
+        }
+      ]
+    },
+    "tuned": {
+      "summary": {
+        "config": "tuned",
+        "n": 4,
+        "compliance_rate": 1.0,
+        "fact_accuracy": 0.6666666666666666,
+        "severity_accuracy": 1.0,
+        "mean_ttft_s": 0.169,
+        "mean_decode_tps": 91.8
+      },
+      "runs": [
+        {
+          "alert": "[FIRING] checkout-svc p99 latency 9101ms (threshold 800ms), db_pool_wait_ms=1900, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": false,
+            "facts_correct": 2
+          },
+          "severity_match": true,
+          "ttft_s": 0.191,
+          "decode_tps": 91.8
+        },
+        {
+          "alert": "[FIRING] checkout-svc 5xx rate 9202% on /cart/confirm, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": false,
+            "facts_correct": 2
+          },
+          "severity_match": true,
+          "ttft_s": 0.161,
+          "decode_tps": 91.9
+        },
+        {
+          "alert": "[WARNING] checkout-svc db_pool_wait_ms=9303 trending up over 15m, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": false,
+            "facts_correct": 2
+          },
+          "severity_match": true,
+          "ttft_s": 0.161,
+          "decode_tps": 91.9
+        },
+        {
+          "alert": "[INFO] checkout-svc pool utilisation 9404% during scheduled load test, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P3\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#atlas-oncall\",\"escalate\":false}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": false,
+            "facts_correct": 2
+          },
+          "severity_match": true,
+          "ttft_s": 0.162,
+          "decode_tps": 91.8
+        }
+      ]
+    },
+    "tuned_rag": {
+      "summary": {
+        "config": "tuned_rag",
+        "n": 4,
+        "compliance_rate": 1.0,
+        "fact_accuracy": 1.0,
+        "severity_accuracy": 0.75,
+        "mean_ttft_s": 0.183,
+        "mean_decode_tps": 91.6
+      },
+      "runs": [
+        {
+          "alert": "[FIRING] checkout-svc p99 latency 9101ms (threshold 800ms), db_pool_wait_ms=1900, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#borealis-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.183,
+          "decode_tps": 91.6
+        },
+        {
+          "alert": "[FIRING] checkout-svc 5xx rate 9202% on /cart/confirm, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P1\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#borealis-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P1",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.185,
+          "decode_tps": 91.6
+        },
+        {
+          "alert": "[WARNING] checkout-svc db_pool_wait_ms=9303 trending up over 15m, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#borealis-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P2",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": true
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": true,
+          "ttft_s": 0.184,
+          "decode_tps": 91.7
+        },
+        {
+          "alert": "[INFO] checkout-svc pool utilisation 9404% during scheduled load test, region=us-west-2",
+          "service": "checkout-svc",
+          "output": "{\"severity\":\"P2\",\"affected_service\":\"checkout-svc\",\"probable_cause\":\"db connection-pool exhaustion during flash sales\",\"runbook_ref\":\"RB-CHK-001\",\"escalate_to\":\"#borealis-oncall\",\"escalate\":true}",
+          "truth": {
+            "severity": "P3",
+            "affected_service": "checkout-svc",
+            "probable_cause": "db connection-pool exhaustion during flash sales",
+            "runbook_ref": "RB-CHK-001",
+            "escalate_to": "#borealis-oncall",
+            "escalate": false
+          },
+          "behavior": {
+            "valid_json": true,
+            "all_keys": true,
+            "severity_ok": true,
+            "escalate_bool": true,
+            "no_prose": true,
+            "compliant": true
+          },
+          "facts": {
+            "affected_service": true,
+            "runbook_ref": true,
+            "escalate_to": true,
+            "facts_correct": 3
+          },
+          "severity_match": false,
+          "ttft_s": 0.181,
+          "decode_tps": 91.6
+        }
+      ]
+    }
+  }
+}
