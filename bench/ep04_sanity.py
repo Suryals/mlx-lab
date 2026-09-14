@@ -12,12 +12,13 @@ from pathlib import Path
 from bench.ep04_model import Runner
 from bench.ep04_score import score_behavior
 
-EVAL = Path("data/ep04/eval.jsonl")
+ROOT = Path(__file__).parent.parent
+EVAL = ROOT / "data" / "ep04" / "eval.jsonl"
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--adapter", default="adapters/ep04-qwen3.5-4b")
+    ap.add_argument("--adapter", default=str(ROOT / "adapters" / "ep04-qwen3.5-4b"))
     args = ap.parse_args()
     rows = [json.loads(l) for l in EVAL.read_text().splitlines()][:10]
     tallies = {}

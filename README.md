@@ -73,7 +73,7 @@ See [`content/ep01-portfolio.md`](content/ep01-portfolio.md) for the full writeu
 
 ```bash
 uv run python bench/ep04_gen_data.py                       # docs + jsonl
-uv run mlx_lm.lora --config bench/ep04_lora.yaml            # ~10 min on M5 Max
+uv run mlx_lm.lora --config bench/ep04_lora.yaml            # ~30–45 min on M5 Max at 0.2–0.38 it/s
 uv run python bench/ep04_sanity.py                          # gate
 uv run python bench/ep04_eval.py --docs v1 --out results/ep04-grid.json
 uv run python bench/ep04_eval.py --docs v2 --configs base_rag tuned tuned_rag --only-service checkout-svc --out results/ep04-reorg.json

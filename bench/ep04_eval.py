@@ -22,12 +22,12 @@ from pathlib import Path
 
 from bench.ep04_gen_data import triage_answer
 from bench.ep04_rag import TfidfIndex, format_context, load_index
-from bench.ep04_score import parse_output, score_behavior, score_facts
+from bench.ep04_score import FACT_KEYS, parse_output, score_behavior, score_facts
 from bench.ep04_world import ALERT_TEMPLATES, SERVICES, Service, reorg
 
 ROOT = Path(__file__).parent.parent
 DATA = ROOT / "data" / "ep04"
-ADAPTER = "adapters/ep04-qwen3.5-4b"
+ADAPTER = str(ROOT / "adapters" / "ep04-qwen3.5-4b")
 CONFIGS = ("base", "base_rag", "tuned", "tuned_rag")
 
 
@@ -64,7 +64,7 @@ def run_config(name: str, runner, rows: list[dict], index: TfidfIndex | None,
     summary = {
         "config": name, "n": n,
         "compliance_rate": sum(r["behavior"]["compliant"] for r in runs) / n,
-        "fact_accuracy": sum(r["facts"]["facts_correct"] for r in runs) / (3 * n),
+        "fact_accuracy": sum(r["facts"]["facts_correct"] for r in runs) / (len(FACT_KEYS) * n),
         "severity_accuracy": sum(r["severity_match"] for r in runs) / n,
         "mean_ttft_s": round(sum(r["ttft_s"] for r in runs) / n, 3),
         "mean_decode_tps": round(sum(r["decode_tps"] for r in runs) / n, 1),
