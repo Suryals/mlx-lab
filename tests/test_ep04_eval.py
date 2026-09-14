@@ -57,6 +57,22 @@ def test_reorg_stale_vs_fresh():
     assert all(r["facts"]["escalate_to"] is True for r in fresh["runs"])
 
 
+def test_run_config_handles_empty_rows():
+    res = run_config("base", FakeRunner(tuned=False), [], None, SERVICES)
+    assert res["summary"]["n"] == 0
+    assert res["summary"]["compliance_rate"] == 0.0
+    assert res["summary"]["fact_accuracy"] == 0.0
+    assert res["summary"]["severity_accuracy"] == 0.0
+
+
+def test_severity_accuracy_tracks_severity_match_separately_from_facts():
+    res = run_config("tuned", FakeRunner(tuned=True), _rows(), None, SERVICES)
+    assert res["summary"]["severity_accuracy"] == 0.5
+    mismatches = [r for r in res["runs"] if r["truth"]["severity"] in ("P2", "P3")]
+    assert len(mismatches) == 2
+    assert all(r["severity_match"] is False for r in mismatches)
+
+
 def test_markdown_grid_lists_all_configs():
     idx = TfidfIndex.build(chunk_docs(build_docs(SERVICES)))
     results = {c: run_config(c, FakeRunner("tuned" in c), _rows(), idx if "rag" in c else None, SERVICES)

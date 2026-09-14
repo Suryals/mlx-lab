@@ -50,13 +50,22 @@ def run_config(name: str, runner, rows: list[dict], index: TfidfIndex | None,
         runs.append({
             "alert": row["alert"], "service": row["service"], "output": g.text,
             "truth": truth, "behavior": score_behavior(g.text), "facts": score_facts(obj, truth),
+            "severity_match": bool(obj is not None and obj.get("severity") == truth["severity"]),
             "ttft_s": round(g.ttft_s, 3), "decode_tps": round(g.decode_tps, 1),
         })
     n = len(runs)
+    if n == 0:
+        summary = {
+            "config": name, "n": 0,
+            "compliance_rate": 0.0, "fact_accuracy": 0.0, "severity_accuracy": 0.0,
+            "mean_ttft_s": 0.0, "mean_decode_tps": 0.0,
+        }
+        return {"summary": summary, "runs": runs}
     summary = {
         "config": name, "n": n,
         "compliance_rate": sum(r["behavior"]["compliant"] for r in runs) / n,
         "fact_accuracy": sum(r["facts"]["facts_correct"] for r in runs) / (3 * n),
+        "severity_accuracy": sum(r["severity_match"] for r in runs) / n,
         "mean_ttft_s": round(sum(r["ttft_s"] for r in runs) / n, 3),
         "mean_decode_tps": round(sum(r["decode_tps"] for r in runs) / n, 1),
     }
@@ -64,11 +73,12 @@ def run_config(name: str, runner, rows: list[dict], index: TfidfIndex | None,
 
 
 def markdown_grid(results: dict[str, dict]) -> str:
-    lines = ["| config | compliance | fact accuracy | mean TTFT | decode tok/s |", "|---|---|---|---|---|"]
+    lines = ["| config | compliance | severity | fact accuracy | mean TTFT | decode tok/s |",
+              "|---|---|---|---|---|---|"]
     for c, r in results.items():
         s = r["summary"]
-        lines.append(f"| {c} | {s['compliance_rate']:.0%} | {s['fact_accuracy']:.0%} | "
-                     f"{s['mean_ttft_s']:.2f}s | {s['mean_decode_tps']:.0f} |")
+        lines.append(f"| {c} | {s['compliance_rate']:.0%} | {s['severity_accuracy']:.0%} | "
+                     f"{s['fact_accuracy']:.0%} | {s['mean_ttft_s']:.2f}s | {s['mean_decode_tps']:.0f} |")
     return "\n".join(lines)
 
 
@@ -96,6 +106,8 @@ def main() -> None:
     rows = [json.loads(l) for l in (DATA / "eval.jsonl").read_text().splitlines()]
     if args.only_service:
         rows = [r for r in rows if r["service"] == args.only_service]
+    if not rows:
+        raise SystemExit(f"no eval rows match --only-service {args.only_service!r}")
     index = load_index(DATA / f"docs_{args.docs}")
 
     runners: dict[str, Runner] = {}
